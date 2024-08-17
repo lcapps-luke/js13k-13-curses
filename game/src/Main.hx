@@ -1,5 +1,7 @@
 package;
 
+import js.html.svg.Point;
+import ui.Pointer;
 import js.Browser;
 import js.html.CanvasRenderingContext2D;
 import js.html.CanvasElement;
@@ -9,8 +11,17 @@ class Main{
 	public static inline var HEIGHT = 1920;
 	public static var TITLE = "13 Curses";
 
-	public static var canvas:CanvasElement;
-	public static var context:CanvasRenderingContext2D;
+	@:native("ca")
+	public static var canvas(default, null):CanvasElement;
+
+	@:native("c")
+	public static var context(default, null):CanvasRenderingContext2D;
+
+	@:native("cs")
+	public static var currentScreen:AbstractScreen;
+
+	@:native("l")
+	public static var lastFrame:Float = 0;
 
 	public static function main(){
 		canvas = cast Browser.document.getElementById("c");
@@ -19,18 +30,19 @@ class Main{
 		Browser.window.onresize = onResize;
 		onResize();
 
+		currentScreen = new MainMenuScreen();
+
+		Pointer.init();
 		Browser.window.requestAnimationFrame(update);
 	}
 
 	private static function update(s:Float){
-		context.fillStyle = "#fff";
-		context.fillRect(0, 0, WIDTH, HEIGHT);
-		
-		context.fillStyle = "#000";
-		context.font = "100px sans-serif";
-		var textWidth = context.measureText(TITLE);
-		context.fillText(TITLE, WIDTH / 2 - textWidth.width / 2, HEIGHT * 0.25);
+		var d = s - lastFrame;
 
+		currentScreen?.update(d / 1000);
+
+		lastFrame = s;
+		Pointer.update();
 		Browser.window.requestAnimationFrame(update);
 	}
 
