@@ -1,5 +1,6 @@
 package;
 
+import ui.Tween;
 import js.html.svg.Point;
 import ui.Pointer;
 import js.Browser;
@@ -39,6 +40,7 @@ class Main{
 	private static function update(s:Float){
 		var d = s - lastFrame;
 
+		TimerManager.update(d / 1000);
 		currentScreen?.update(d / 1000);
 
 		lastFrame = s;
