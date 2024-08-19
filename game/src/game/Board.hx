@@ -1,7 +1,5 @@
 package game;
 
-import haxe.rtti.CType.Platforms;
-
 class Board{
 	public static inline var TURN_DRAW = 0;
 	public static inline var TURN_PLAYER = 1;
