@@ -31,6 +31,7 @@ class GameScreen extends AbstractScreen{
 
 	private var playerHand = new Array<CardSprite>();
 	private var aiHand = new Array<CardSprite>();
+	private var shop = new Array<CardSprite>();
 
 	private var coin = new Coin(Main.WIDTH + 420, Main.HEIGHT / 2 - 210, true);
 	private var flipButton:Button;
@@ -61,6 +62,10 @@ class GameScreen extends AbstractScreen{
 		//TODO render round number
 		//TODO render points
 		//TODO render shop
+		for(c in shop){
+			c.update(s);
+		}
+
 		//TODO render player hands
 		for(c in playerHand){
 			c.update(s);
@@ -119,10 +124,65 @@ class GameScreen extends AbstractScreen{
 			});
 		}
 
-		lastTween = lastTween.then((t) -> {
+		lastTween.then((t) -> {
 			return WaitTimer.sec(0.5);
 		}).then(t-> {
-			setPhase(chooseLeaderPhase);
+			setPhase(startRoundPhase);
+		});
+	}
+
+	private function startRoundPhase(s:Float){
+		setPhase();
+		round++;
+		board.resetShop();
+
+		var lastTween:Promise<Dynamic> = null;
+		for(c in shop){
+			if(lastTween == null){
+				c.flip();
+				lastTween = Tween.start(c, {x: -c.w}, 0.5);
+			}else{
+				lastTween = lastTween.then(t -> {
+					c.flip();
+					return Tween.start(c, {x: -c.w}, 0.5);
+				});
+			}
+		}
+
+		if(lastTween != null){
+			lastTween = lastTween.then(t -> {
+				shop = new Array<CardSprite>();
+				return Promise.resolve(shop);
+			});
+		}
+
+		var shopSlotWidth = CardSprite.WIDTH + 25;
+		var startX = Main.WIDTH / 2 - (shopSlotWidth * Board.SHOP_SIZE) / 2;
+
+		var idx = 0;
+		for(card in board.shop){
+			var spr = new CardSprite(card, Main.WIDTH, Main.HEIGHT / 2 - CardSprite.HEIGHT / 2);
+
+			var tx = startX + shopSlotWidth * idx;
+			idx++;
+
+			if(lastTween == null){
+				shop.push(spr);
+				spr.flip();
+				lastTween = Tween.start(spr, {x:tx}, 0.3);
+			}else{
+				lastTween = lastTween.then((t) -> {
+					shop.push(spr);
+					spr.flip();
+					return Tween.start(spr, {x:tx}, 0.3);
+				});
+			}
+		}
+
+		lastTween.then((t) -> {
+			return WaitTimer.sec(0.5);
+		}).then(t-> {
+			nextRound();
 		});
 	}
 
@@ -207,11 +267,11 @@ class GameScreen extends AbstractScreen{
 
 	private function nextTurn(){
 		roundTurn++;
-		if(round < 2){
+		if(roundTurn < 2){
 			playerTurn = playerTurn == 0 ? 1 : 0;
 			setPhase(startTurnPhase);
 		}else{
-			nextRound();
+			setPhase(startRoundPhase);
 		}
 	}
 
@@ -219,6 +279,8 @@ class GameScreen extends AbstractScreen{
 		playerTurn = board.getTurnLeader();
 		if(playerTurn == Board.TURN_DRAW){
 			setPhase(chooseLeaderPhase);
+		}else{
+			setPhase(startTurnPhase);
 		}
 	}
 
