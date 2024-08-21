@@ -9,6 +9,8 @@ import ui.CardSprite;
 import ui.Coin;
 import game.Board;
 
+using ui.ContextUtils;
+
 class GameScreen extends AbstractScreen{
 	private static inline var AI_PLAYER_INDEX = 1;
 	private static inline var CHOOSE_LEADER_START = 0;
@@ -24,7 +26,7 @@ class GameScreen extends AbstractScreen{
 	private var phaseFunc:Float->Void;
 	private var phaseStep = CHOOSE_LEADER_START;
 
-	private var round:Int = 1;
+	private var round:Int = 0;
 	private var roundTurn:Int = 0;
 
 	private var playerTurn:Int = -1;
@@ -59,8 +61,32 @@ class GameScreen extends AbstractScreen{
 		super.update(s);
 
 		//TODO render BG
+		Main.context.strokeStyle = "#777";
+		Main.context.fillStyle="#fff";
+		Main.context.lineWidth = 3;
+		Main.context.beginPath();
+		Main.context.moveTo(0, Main.HEIGHT / 2);
+		Main.context.lineTo(Main.WIDTH, Main.HEIGHT / 2);
+		Main.context.stroke();
+
+		var shopSlotWidth = CardSprite.WIDTH + 25;
+		var startX = Main.WIDTH / 2 - (shopSlotWidth * Board.SHOP_SIZE) / 2;
+		for(i in 0...3){
+			Main.context.roundRect(startX + shopSlotWidth * i, Main.HEIGHT / 2 - CardSprite.HEIGHT / 2, CardSprite.WIDTH, CardSprite.HEIGHT, 5, true, true);
+		}
+
 		//TODO render round number
+		Main.context.fillStyle="#000";
+		Main.context.font = "40px sans-serif";
+		Main.context.centeredText('Round $round', 0, startX, Main.HEIGHT / 2 - 60);
+
 		//TODO render points
+		Main.context.font = "100px sans-serif";
+		Main.context.centeredText(Std.string(board.players[0].points), 0, startX, Main.HEIGHT / 2 + 100);
+
+		Main.context.font = "100px sans-serif";
+		Main.context.centeredText(Std.string(board.players[1].points), startX + shopSlotWidth * 3 - 12.5, startX, Main.HEIGHT / 2 - 30);
+
 		//TODO render shop
 		for(c in shop){
 			c.update(s);
@@ -76,6 +102,26 @@ class GameScreen extends AbstractScreen{
 
 
 		//TODO render curses
+		Main.context.strokeStyle = "#000";
+		Main.context.fillStyle="#fff";
+		Main.context.lineWidth = 3;
+		var curseSlotSize = Main.WIDTH / 16;
+		var curseSlotRadius = (curseSlotSize - 6) / 2;
+		for(i in 0...16){
+			var e = i == 12;
+
+			//AI
+			Main.context.beginPath();
+			Main.context.ellipse(curseSlotSize * i + 3 + curseSlotRadius, curseSlotRadius + 13, curseSlotRadius, curseSlotRadius, 0, 0, Math.PI * 2);
+			Main.context.stroke();
+
+			//player
+			Main.context.beginPath();
+			Main.context.ellipse(curseSlotSize * i + 3 + curseSlotRadius, Main.HEIGHT - curseSlotRadius - 13, curseSlotRadius, curseSlotRadius, 0, 0, Math.PI * 2);
+			Main.context.stroke();
+			
+		}
+
 		//TODO render end turn button when relevent
 
 

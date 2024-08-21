@@ -2,9 +2,9 @@ package ui;
 
 import js.html.CanvasRenderingContext2D;
 
-class ContextUtils{
-
-	public static function roundRect(ctx:CanvasRenderingContext2D, x:Float, y:Float, width:Float, height:Float, radius:Float = 5, fill:Bool = false, stroke:Bool = true) {
+class ContextUtils {
+	public static function roundRect(ctx:CanvasRenderingContext2D, x:Float, y:Float, width:Float, height:Float, radius:Float = 5, fill:Bool = false,
+			stroke:Bool = true) {
 		ctx.beginPath();
 		ctx.moveTo(x + radius, y);
 		ctx.lineTo(x + width - radius, y);
@@ -18,11 +18,22 @@ class ContextUtils{
 		ctx.closePath();
 
 		if (fill) {
-		  ctx.fill();
+			ctx.fill();
 		}
-		
+
 		if (stroke) {
-		  ctx.stroke();
+			ctx.stroke();
+		}
+	}
+
+	public static function centeredText(ctx:CanvasRenderingContext2D, txt:String, x:Float, w:Float, y:Float, fill:Bool = true, stroke:Bool = false) {
+		var tw = ctx.measureText(txt).width;
+		if (fill) {
+			ctx.fillText(txt, x + w / 2 - tw / 2, y);
+		}
+
+		if (stroke) {
+			ctx.strokeText(txt, x + w / 2 - tw / 2, y);
 		}
 	}
 }

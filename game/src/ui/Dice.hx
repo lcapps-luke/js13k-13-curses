@@ -38,8 +38,7 @@ class Dice extends Sprite{
 		Main.context.font = "100px sans-serif";
 		Main.context.fillStyle = "#fff";
 		var tx = Std.string(f);
-		var tw = Main.context.measureText(tx).width;
-		Main.context.fillText(tx, x + w / 2 - tw / 2, y + w * 0.6);
+		Main.context.centeredText(tx, x, w, y + w * 0.6);
 	}
 
 	public function roll():Promise<Int>{
