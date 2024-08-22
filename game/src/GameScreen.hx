@@ -1,5 +1,6 @@
 package;
 
+import ui.HandCardButton;
 import ui.Dice;
 import ui.Button;
 import ui.WaitTimer;
@@ -20,6 +21,8 @@ class GameScreen extends AbstractScreen{
 	private static inline var ROLL_DICE_WAIT = 1;
 	private static inline var ROLL_DICE = 2;
 	private static inline var ROLL_DICE_END = 3;
+
+	private static inline var PLAYER_HAND_Y:Float = 1520;
 
 	private var board = new Board();
 
@@ -42,6 +45,7 @@ class GameScreen extends AbstractScreen{
 	private var rollButton:Button;
 
 	private var endTurnButton:Button;
+	private var handButtons = new Array<HandCardButton>();
 
 	public function new(){
 		super();
@@ -55,6 +59,12 @@ class GameScreen extends AbstractScreen{
 
 		endTurnButton = new Button("End\nTurn", "40px sans-serif", 0, Main.HEIGHT / 2 + 10, -1, 130);
 		endTurnButton.x = Main.WIDTH * 0.8 + Main.WIDTH / 10 - endTurnButton.w / 2;
+
+		for(i in 0...5){
+			var tx = (1080 / 5) * i + 20;
+
+			handButtons.push(new HandCardButton(tx, PLAYER_HAND_Y, playerHand, i));
+		}
 	}
 
 	override function update(s:Float) {
@@ -149,7 +159,7 @@ class GameScreen extends AbstractScreen{
 			hand.push(spr);
 
 			var tx = (1080 / 5) * Math.floor(i / 2) + 20;
-			var ty = playerIndex == AI_PLAYER_INDEX ? 120 : 1520;
+			var ty = playerIndex == AI_PLAYER_INDEX ? 120 : PLAYER_HAND_Y;
 
 			if(lastTween == null){
 				lastTween = Tween.start(spr, {x:tx, y:ty}, 0.3);
@@ -300,7 +310,7 @@ class GameScreen extends AbstractScreen{
 
 	private function aiTurnPhase(s:Float){
 		//TODO AI
-		//TODO and turn
+		//TODO end turn
 		nextTurn();
 	}
 
@@ -308,6 +318,13 @@ class GameScreen extends AbstractScreen{
 		endTurnButton.update();
 		if(endTurnButton.clicked){
 			nextTurn();
+		}
+
+		for(hb in handButtons){
+			hb.update(s);
+			if(hb.clicked){
+				//TODO display card
+			}
 		}
 	}
 

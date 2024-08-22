@@ -22,7 +22,7 @@ class Region{
 		this.h = h;
 	}
 
-	public function update(){
+	public function update(s:Float=0){
 		state = STATE_NORMAL;
 		clicked = false;
 

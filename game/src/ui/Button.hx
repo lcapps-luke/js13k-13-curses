@@ -22,8 +22,8 @@ class Button extends Region{
 		this.font = font;
 	}
 
-	override function update() {
-		super.update();
+	override function update(s:Float=0) {
+		super.update(s);
 
 		Main.context.lineWidth = 3;
 
