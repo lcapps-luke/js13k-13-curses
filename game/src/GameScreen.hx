@@ -1,5 +1,9 @@
 package;
 
+import ui.effect.PlaceholderEffect;
+import ui.effect.CurseEffect;
+import game.CardEffect;
+import ui.effect.CardEffectSprite;
 import ui.HandCardButton;
 import ui.Dice;
 import ui.Button;
@@ -21,6 +25,9 @@ class GameScreen extends AbstractScreen{
 	private static inline var ROLL_DICE_WAIT = 1;
 	private static inline var ROLL_DICE = 2;
 	private static inline var ROLL_DICE_END = 3;
+	private static inline var PLAYER_TURN_WAIT = 0;
+	private static inline var PLAYER_TURN_SHOW_HAND = 1;
+	private static inline var PLAYER_TURN_SHOW_SHOP = 2;
 
 	private static inline var PLAYER_HAND_Y:Float = 1520;
 
@@ -46,6 +53,11 @@ class GameScreen extends AbstractScreen{
 
 	private var endTurnButton:Button;
 	private var handButtons = new Array<HandCardButton>();
+	private var selectedHandIndex = -1;
+	private var playButton:Button;
+	private var backButton:Button;
+
+	private var currentEffect:CardEffectSprite = null;
 
 	public function new(){
 		super();
@@ -57,7 +69,7 @@ class GameScreen extends AbstractScreen{
 		rollButton = new Button("Roll", "100px sans-serif", 0, Main.HEIGHT * 0.65, -1, 120);
 		rollButton.x = Main.WIDTH / 2 - flipButton.w / 2;
 
-		endTurnButton = new Button("End\nTurn", "40px sans-serif", 0, Main.HEIGHT / 2 + 10, -1, 130);
+		endTurnButton = new Button("End Turn", "40px sans-serif", 0, Main.HEIGHT / 2 + 10, -1, 130);
 		endTurnButton.x = Main.WIDTH * 0.8 + Main.WIDTH / 10 - endTurnButton.w / 2;
 
 		for(i in 0...5){
@@ -65,6 +77,14 @@ class GameScreen extends AbstractScreen{
 
 			handButtons.push(new HandCardButton(tx, PLAYER_HAND_Y, playerHand, i));
 		}
+
+		var playBackSpace = (Main.WIDTH / 2 - (CardSprite.WIDTH * 3) / 2);
+
+		backButton = new Button("Back", "40px sans-serif", 0, Main.HEIGHT * 0.6, -1, 130);
+		backButton.x = playBackSpace / 2 - backButton.w / 2;
+
+		playButton = new Button("Play", "40px sans-serif", 0, Main.HEIGHT * 0.6, -1, 130);
+		playButton.x = Main.WIDTH - (playBackSpace / 2 - playButton.w / 2) - playButton.w;
 	}
 
 	override function update(s:Float) {
@@ -121,21 +141,24 @@ class GameScreen extends AbstractScreen{
 			var e = i == 12;
 
 			//AI
+			Main.context.fillStyle = i < board.players[1].curses ? "#f0f" : "#fff";
 			Main.context.beginPath();
 			Main.context.ellipse(curseSlotSize * i + 3 + curseSlotRadius, curseSlotRadius + 13, curseSlotRadius, curseSlotRadius, 0, 0, Math.PI * 2);
 			Main.context.stroke();
+			Main.context.fill();
 
 			//player
+			Main.context.fillStyle = i < board.players[0].curses ? "#f0f" : "#fff";
 			Main.context.beginPath();
 			Main.context.ellipse(curseSlotSize * i + 3 + curseSlotRadius, Main.HEIGHT - curseSlotRadius - 13, curseSlotRadius, curseSlotRadius, 0, 0, Math.PI * 2);
 			Main.context.stroke();
+			Main.context.fill();
 			
 		}
 
-		//TODO render end turn button when relevent
-
-
 		phaseFunc(s);
+
+		currentEffect?.update(s);
 	}
 
 	private function setPhase(p:Float->Void = null){
@@ -158,8 +181,8 @@ class GameScreen extends AbstractScreen{
 			var hand = playerIndex == AI_PLAYER_INDEX ? aiHand : playerHand;
 			hand.push(spr);
 
-			var tx = (1080 / 5) * Math.floor(i / 2) + 20;
-			var ty = playerIndex == AI_PLAYER_INDEX ? 120 : PLAYER_HAND_Y;
+			var tx = cardHandX(Math.floor(i / 2)); //(Main.WIDTH / 5) * Math.floor(i / 2) + 20;
+			var ty = cardHandY(playerIndex);//playerIndex == AI_PLAYER_INDEX ? 120 : PLAYER_HAND_Y;
 
 			if(lastTween == null){
 				lastTween = Tween.start(spr, {x:tx, y:ty}, 0.3);
@@ -185,6 +208,14 @@ class GameScreen extends AbstractScreen{
 		}).then(t-> {
 			setPhase(startRoundPhase);
 		});
+	}
+
+	private static inline function cardHandX(i:Int):Float{
+		return (Main.WIDTH / 5) * i + 20;
+	}
+
+	private static inline function cardHandY(p:Int):Float{
+		return p == AI_PLAYER_INDEX ? 120 : PLAYER_HAND_Y;
 	}
 
 	private function startRoundPhase(s:Float){
@@ -259,7 +290,6 @@ class GameScreen extends AbstractScreen{
 	
 				coin.flip().then(b -> {
 					playerTurn = b ? 0 : 1;
-					roundTurn = 0;
 				}).then(t -> WaitTimer.sec(0.5)).then(t-> {
 					return Tween.start(coin, {x:Main.WIDTH + coin.w}, 0.5);
 				}).then((t) -> {
@@ -315,18 +345,152 @@ class GameScreen extends AbstractScreen{
 	}
 
 	private function playerTurnPhase(s:Float){
-		endTurnButton.update();
-		if(endTurnButton.clicked){
-			nextTurn();
+		if(phaseStep == PLAYER_TURN_WAIT){
+			endTurnButton.update();
+			if(endTurnButton.clicked){
+				nextTurn();
+			}
+
+			for(hb in handButtons){
+				if(hb.cardIndex >= playerHand.length){
+					break;
+				}
+
+				hb.update(s);
+				if(hb.clicked){
+					phaseStep = -1;
+					selectedHandIndex = hb.cardIndex;
+
+					Tween.start(playerHand[hb.cardIndex], {
+						scaleX: 3,
+						scaleY: 3,
+						x: Main.WIDTH / 2 - CardSprite.WIDTH / 2,
+						y: Main.HEIGHT / 2 - (CardSprite.HEIGHT * 3) / 2
+					}, 0.2).then(t -> phaseStep = PLAYER_TURN_SHOW_HAND);
+				}
+			}
+
+			//TODO shop cards
 		}
 
-		for(hb in handButtons){
-			hb.update(s);
-			if(hb.clicked){
-				//TODO display card
+		if(phaseStep == PLAYER_TURN_SHOW_HAND){
+			playButton.update();
+			backButton.update();
+
+			if(backButton.clicked){
+				phaseStep = -1;
+
+				Tween.start(playerHand[selectedHandIndex], {
+					scaleX: 1,
+					scaleY: 1,
+					x: cardHandX(selectedHandIndex),
+					y: cardHandY(0)
+				}, 0.2).then(t -> phaseStep = PLAYER_TURN_WAIT);
+			}
+
+			if(playButton.clicked){
+				phaseStep = -1;
+				//TODO play card
+				var cardSpr = playerHand[selectedHandIndex];
+				Tween.start(cardSpr, { scaleX: 0, scaleY: 0, y:Main.HEIGHT / 2 }, 0.5)
+					.then(t -> {return playCard(0, cardSpr);})
+					.then(t -> {phaseStep = PLAYER_TURN_WAIT;});
 			}
 		}
 	}
+
+	private function playCard(playerIndex:Int, spr:CardSprite):Promise<Dynamic>{
+		// get change from card
+		var lastEffect = Promise.resolve();
+		for(i in spr.card.getEffects()){
+			var eff = createCardEffect(i, playerIndex);
+			lastEffect = lastEffect.then(r -> {
+				currentEffect = eff;
+				return eff.play();
+			});
+		}
+		
+		return lastEffect.then(e -> {
+			currentEffect = null;
+
+			var ownHand = playerIndex == AI_PLAYER_INDEX ? aiHand : playerHand;
+			ownHand.remove(spr);
+			board.players[playerIndex].cards.remove(spr.card);
+
+			return new Promise((res, rej) -> {
+				var lastTween:Promise<Tween> = Promise.resolve();
+
+				for(c in ownHand){
+					lastTween = lastTween.then(t -> {
+						var idx = board.players[playerIndex].cards.indexOf(c.card);
+						return Tween.start(c, {
+							x: cardHandX(idx)
+						}, 0.5);
+					});
+				}
+
+				lastTween.then(t -> res(null));
+			});
+		});
+	}
+	
+	function createCardEffect(eff:CardEffect, playerIndex:Int):CardEffectSprite {
+		return switch(eff){
+			case ADD_CURSE_OTHER:
+				return new CurseEffect(playerIndex, board);
+			case ADD_CURSE_SELF:
+				return new CurseEffect(playerIndex == 0 ? 1 : 0, board);
+			case REMOVE_CURSE_OTHER:
+				return new PlaceholderEffect(playerIndex, board, (p,b) -> {
+					b.players[p == 0 ? 1 : 0].curses--;
+					trace(eff.getName());
+				});
+			case REMOVE_CURSE_SELF:
+				return new PlaceholderEffect(playerIndex, board, (p,b) -> {
+					b.players[p].curses--;
+					trace(eff.getName());
+				});
+			case TAKE_CURSE:
+				return new PlaceholderEffect(playerIndex, board, (p,b) -> {
+					b.players[p == 0 ? 1 : 0].curses--;
+					b.players[p].curses++;
+					trace(eff.getName());
+				});
+			case GIVE_CURSE:
+				return new PlaceholderEffect(playerIndex, board, (p,b) -> {
+					b.players[p == 0 ? 1 : 0].curses++;
+					b.players[p].curses--;
+					trace(eff.getName());
+				});
+			case GAIN_POINT:
+				return new PlaceholderEffect(playerIndex, board, (p,b) -> {
+					b.players[p].points++;
+					trace(eff.getName());
+				});
+			case REMOVE_POINT:
+				return new PlaceholderEffect(playerIndex, board, (p,b) -> {
+					b.players[p].points--;
+					trace(eff.getName());
+				});
+			case SEAL_OWN_CURSE:
+				return new PlaceholderEffect(playerIndex, board, (p,b) -> {
+					trace(eff.getName());
+				});
+			case SEAL_OTHER_CURSE:
+				return new PlaceholderEffect(playerIndex, board, (p,b) -> {
+					trace(eff.getName());
+				});
+			case PROTECT_SELF:
+				return new PlaceholderEffect(playerIndex, board, (p,b) -> {
+					trace(eff.getName());
+				});
+			case PROTECT_OTHER:
+				return new PlaceholderEffect(playerIndex, board, (p,b) -> {
+					trace(eff.getName());
+				});
+		};
+	}
+	
 
 	private function nextTurn(){
 		roundTurn++;
@@ -339,6 +503,7 @@ class GameScreen extends AbstractScreen{
 	}
 
 	private function nextRound(){
+		roundTurn = 0;
 		playerTurn = board.getTurnLeader();
 		if(playerTurn == Board.TURN_DRAW){
 			setPhase(chooseLeaderPhase);

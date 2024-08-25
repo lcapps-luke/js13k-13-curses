@@ -1,9 +1,9 @@
 package game;
 
 class Board{
-	public static inline var TURN_DRAW = 0;
-	public static inline var TURN_PLAYER = 1;
-	public static inline var TURN_AI = 2;
+	public static inline var TURN_DRAW = -1;
+	public static inline var TURN_PLAYER = 0;
+	public static inline var TURN_AI = 1;
 	public static inline var SHOP_SIZE = 3;
 
 	public var players(default, null):Array<Player>;
@@ -28,7 +28,9 @@ class Board{
 	}
 
 	public function drawCard(){
-		return new Card();
+		var list = CardEffect.createAll();
+		var effIndex = Math.floor(Math.random() * list.length);
+		return new Card([list[effIndex]]);
 	}
 
 	public function resetShop(){

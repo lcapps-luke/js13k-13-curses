@@ -9,7 +9,7 @@ class CardSprite extends Sprite{
 	public static inline var WIDTH = 180;
 	public static inline var HEIGHT = 280;
 
-	private var card:Card;
+	public var card(default,null):Card;
 
 	private var faceDown:Bool = false;
 
@@ -22,7 +22,7 @@ class CardSprite extends Sprite{
 		Main.context.lineWidth = 3;
 		Main.context.strokeStyle = "#000";
 		Main.context.fillStyle = faceDown ? "#f00" : "#00f";
-		Main.context.roundRect(x + (w - scaleX * w) / 2, y, w * scaleX, h, 5, true);
+		Main.context.roundRect(x + (w - scaleX * w) / 2, y, w * scaleX, h * scaleY, 5, true);
 	}
 
 	public function flip():Promise<Tween>{
