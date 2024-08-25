@@ -30,6 +30,8 @@ class GameScreen extends AbstractScreen{
 	private static inline var PLAYER_TURN_SHOW_SHOP = 2;
 
 	private static inline var PLAYER_HAND_Y:Float = 1520;
+	private static inline var SHOP_SLOT_WIDTH:Float = CardSprite.WIDTH + 25;
+	private static inline var SHOP_START_X:Float = Main.WIDTH / 2 - (SHOP_SLOT_WIDTH * Board.SHOP_SIZE) / 2;
 
 	private var board = new Board();
 
@@ -53,9 +55,11 @@ class GameScreen extends AbstractScreen{
 
 	private var endTurnButton:Button;
 	private var handButtons = new Array<HandCardButton>();
+	private var shopButtons = new Array<HandCardButton>();
 	private var selectedHandIndex = -1;
 	private var playButton:Button;
 	private var backButton:Button;
+	private var buyButton:Button;
 
 	private var currentEffect:CardEffectSprite = null;
 
@@ -74,8 +78,13 @@ class GameScreen extends AbstractScreen{
 
 		for(i in 0...5){
 			var tx = (1080 / 5) * i + 20;
-
 			handButtons.push(new HandCardButton(tx, PLAYER_HAND_Y, playerHand, i));
+		}
+
+		for(i in 0...3){
+			var tx = SHOP_START_X + SHOP_SLOT_WIDTH * i;
+			var btn = new HandCardButton(tx, Main.HEIGHT / 2 - CardSprite.HEIGHT / 2, shop, i);
+			shopButtons.push(btn);
 		}
 
 		var playBackSpace = (Main.WIDTH / 2 - (CardSprite.WIDTH * 3) / 2);
@@ -85,6 +94,9 @@ class GameScreen extends AbstractScreen{
 
 		playButton = new Button("Play", "40px sans-serif", 0, Main.HEIGHT * 0.6, -1, 130);
 		playButton.x = Main.WIDTH - (playBackSpace / 2 - playButton.w / 2) - playButton.w;
+
+		buyButton = new Button("Buy", "40px sans-serif", 0, Main.HEIGHT * 0.6, -1, 130);
+		buyButton.x = Main.WIDTH - (playBackSpace / 2 - playButton.w / 2) - playButton.w;
 	}
 
 	override function update(s:Float) {
@@ -119,7 +131,7 @@ class GameScreen extends AbstractScreen{
 
 		//TODO render shop
 		for(c in shop){
-			c.update(s);
+			c?.update(s);
 		}
 
 		//TODO render player hands
@@ -218,52 +230,48 @@ class GameScreen extends AbstractScreen{
 		return p == AI_PLAYER_INDEX ? 120 : PLAYER_HAND_Y;
 	}
 
+	private static inline function cardShopX(i:Int):Float{
+		return SHOP_START_X + SHOP_SLOT_WIDTH * i;
+	}
+
+	private static inline function cardShopY():Float{
+		return Main.HEIGHT / 2 - CardSprite.HEIGHT / 2;
+	}
+
 	private function startRoundPhase(s:Float){
 		setPhase();
 		round++;
 		board.resetShop();
 
-		var lastTween:Promise<Dynamic> = null;
+		var lastTween:Promise<Dynamic> = Promise.resolve(null);
 		for(c in shop){
-			if(lastTween == null){
-				c.flip();
-				lastTween = Tween.start(c, {x: -c.w}, 0.5);
-			}else{
-				lastTween = lastTween.then(t -> {
-					c.flip();
-					return Tween.start(c, {x: -c.w}, 0.5);
-				});
+			if(c == null){
+				continue;
 			}
-		}
 
-		if(lastTween != null){
 			lastTween = lastTween.then(t -> {
-				shop = new Array<CardSprite>();
-				return Promise.resolve(shop);
+				c.flip();
+				return Tween.start(c, {x: -c.w}, 0.5);
 			});
 		}
 
-		var shopSlotWidth = CardSprite.WIDTH + 25;
-		var startX = Main.WIDTH / 2 - (shopSlotWidth * Board.SHOP_SIZE) / 2;
+		lastTween = lastTween.then(t -> {
+			shop.resize(0);
+			return Promise.resolve(shop);
+		});
 
 		var idx = 0;
 		for(card in board.shop){
 			var spr = new CardSprite(card, Main.WIDTH, Main.HEIGHT / 2 - CardSprite.HEIGHT / 2);
 
-			var tx = startX + shopSlotWidth * idx;
+			var tx = SHOP_START_X + SHOP_SLOT_WIDTH * idx;
 			idx++;
-
-			if(lastTween == null){
+			
+			lastTween = lastTween.then((t) -> {
 				shop.push(spr);
 				spr.flip();
-				lastTween = Tween.start(spr, {x:tx}, 0.3);
-			}else{
-				lastTween = lastTween.then((t) -> {
-					shop.push(spr);
-					spr.flip();
-					return Tween.start(spr, {x:tx}, 0.3);
-				});
-			}
+				return Tween.start(spr, {x:tx}, 0.3);
+			});
 		}
 
 		lastTween.then((t) -> {
@@ -369,8 +377,26 @@ class GameScreen extends AbstractScreen{
 					}, 0.2).then(t -> phaseStep = PLAYER_TURN_SHOW_HAND);
 				}
 			}
-
+			
 			//TODO shop cards
+			for(sb in shopButtons){
+				if(shop[sb.cardIndex] == null){
+					continue;
+				}
+
+				sb.update();
+				if(sb.clicked){
+					phaseStep = -1;
+					selectedHandIndex = sb.cardIndex;
+
+					Tween.start(shop[sb.cardIndex], {
+						scaleX: 3,
+						scaleY: 3,
+						x: Main.WIDTH / 2 - CardSprite.WIDTH / 2,
+						y: Main.HEIGHT / 2 - (CardSprite.HEIGHT * 3) / 2
+					}, 0.2).then(t -> phaseStep = PLAYER_TURN_SHOW_SHOP);
+				}
+			}
 		}
 
 		if(phaseStep == PLAYER_TURN_SHOW_HAND){
@@ -395,6 +421,45 @@ class GameScreen extends AbstractScreen{
 				Tween.start(cardSpr, { scaleX: 0, scaleY: 0, y:Main.HEIGHT / 2 }, 0.5)
 					.then(t -> {return playCard(0, cardSpr);})
 					.then(t -> {phaseStep = PLAYER_TURN_WAIT;});
+			}
+		}
+
+		if(phaseStep == PLAYER_TURN_SHOW_SHOP){
+			buyButton.update();
+			backButton.update();
+
+			if(backButton.clicked){
+				phaseStep = -1;
+
+				Tween.start(shop[selectedHandIndex], {
+					scaleX: 1,
+					scaleY: 1,
+					x: cardShopX(selectedHandIndex),
+					y: cardShopY()
+				}, 0.2).then(t -> phaseStep = PLAYER_TURN_WAIT);
+			}
+
+			if(buyButton.clicked){
+				phaseStep = -1;
+				board.players[0].points -= 4;
+
+				var cardSpr = shop[selectedHandIndex];
+				var nextPlayerHandIndex = playerHand.length;
+				Tween.start(cardSpr, { 
+					scaleX: 1, 
+					scaleY: 1, 
+					x: cardHandX(nextPlayerHandIndex),
+					y: cardHandY(0)
+				}, 0.5).then(t -> {
+					//remove card from shop
+					board.shop[selectedHandIndex] = null;
+					shop[selectedHandIndex] = null;
+					//add card to player
+					board.players[0].cards.push(cardSpr.card);
+					playerHand.push(cardSpr);
+
+					phaseStep = PLAYER_TURN_WAIT;
+				});
 			}
 		}
 	}

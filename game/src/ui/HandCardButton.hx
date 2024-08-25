@@ -20,6 +20,10 @@ class HandCardButton extends Region{
 		}
 
 		var card = hand[cardIndex];
+		if(card == null){
+			return;
+		}
+
 		var ty = this.state == Region.STATE_OVER ? y - SHIFT_DISTANCE : y;
 
 		var td = ty - card.y;
