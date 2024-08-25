@@ -23,6 +23,13 @@ class CardSprite extends Sprite{
 		Main.context.strokeStyle = "#000";
 		Main.context.fillStyle = faceDown ? "#f00" : "#00f";
 		Main.context.roundRect(x + (w - scaleX * w) / 2, y, w * scaleX, h * scaleY, 5, true);
+
+		Main.context.lineWidth = 1;
+		Main.context.font = "15px sans-serif";
+		Main.context.strokeStyle = "#fff";
+		Main.context.fillStyle = "#000";
+		var name = card.getEffects()[0].getName();
+		Main.context.centeredText(name, x, w, y + (h * scaleY) / 2, true, true);
 	}
 
 	public function flip():Promise<Tween>{
