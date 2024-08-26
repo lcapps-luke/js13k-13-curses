@@ -1,5 +1,6 @@
 package;
 
+import game.CardEffectLibrary;
 import ui.effect.PlaceholderEffect;
 import ui.effect.CurseEffect;
 import game.CardEffect;
@@ -369,7 +370,9 @@ class GameScreen extends AbstractScreen{
 					phaseStep = -1;
 					selectedHandIndex = hb.cardIndex;
 
-					Tween.start(playerHand[hb.cardIndex], {
+					playButton.enabled = playerHand[selectedHandIndex].card.canPlay(board.players[0], board.players[1]);
+
+					Tween.start(playerHand[selectedHandIndex], {
 						scaleX: 3,
 						scaleY: 3,
 						x: Main.WIDTH / 2 - CardSprite.WIDTH / 2,
@@ -389,7 +392,9 @@ class GameScreen extends AbstractScreen{
 					phaseStep = -1;
 					selectedHandIndex = sb.cardIndex;
 
-					Tween.start(shop[sb.cardIndex], {
+					buyButton.enabled = shop[selectedHandIndex].card.cost <= board.players[0].points;
+
+					Tween.start(shop[selectedHandIndex], {
 						scaleX: 3,
 						scaleY: 3,
 						x: Main.WIDTH / 2 - CardSprite.WIDTH / 2,
@@ -500,59 +505,32 @@ class GameScreen extends AbstractScreen{
 	}
 	
 	function createCardEffect(eff:CardEffect, playerIndex:Int):CardEffectSprite {
+		var efunc = CardEffectLibrary.getEffectFunction(eff);
 		return switch(eff){
 			case ADD_CURSE_OTHER:
-				return new CurseEffect(playerIndex, board);
+				return new CurseEffect(playerIndex, board, efunc);
 			case ADD_CURSE_SELF:
-				return new CurseEffect(playerIndex == 0 ? 1 : 0, board);
+				return new CurseEffect(playerIndex, board, efunc);
 			case REMOVE_CURSE_OTHER:
-				return new PlaceholderEffect(playerIndex, board, (p,b) -> {
-					b.players[p == 0 ? 1 : 0].curses--;
-					trace(eff.getName());
-				});
+				return new PlaceholderEffect(playerIndex, board, efunc);
 			case REMOVE_CURSE_SELF:
-				return new PlaceholderEffect(playerIndex, board, (p,b) -> {
-					b.players[p].curses--;
-					trace(eff.getName());
-				});
+				return new PlaceholderEffect(playerIndex, board, efunc);
 			case TAKE_CURSE:
-				return new PlaceholderEffect(playerIndex, board, (p,b) -> {
-					b.players[p == 0 ? 1 : 0].curses--;
-					b.players[p].curses++;
-					trace(eff.getName());
-				});
+				return new PlaceholderEffect(playerIndex, board, efunc);
 			case GIVE_CURSE:
-				return new PlaceholderEffect(playerIndex, board, (p,b) -> {
-					b.players[p == 0 ? 1 : 0].curses++;
-					b.players[p].curses--;
-					trace(eff.getName());
-				});
+				return new PlaceholderEffect(playerIndex, board, efunc);
 			case GAIN_POINT:
-				return new PlaceholderEffect(playerIndex, board, (p,b) -> {
-					b.players[p].points++;
-					trace(eff.getName());
-				});
+				return new PlaceholderEffect(playerIndex, board, efunc);
 			case REMOVE_POINT:
-				return new PlaceholderEffect(playerIndex, board, (p,b) -> {
-					b.players[p].points--;
-					trace(eff.getName());
-				});
+				return new PlaceholderEffect(playerIndex, board, efunc);
 			case SEAL_OWN_CURSE:
-				return new PlaceholderEffect(playerIndex, board, (p,b) -> {
-					trace(eff.getName());
-				});
+				return new PlaceholderEffect(playerIndex, board, efunc);
 			case SEAL_OTHER_CURSE:
-				return new PlaceholderEffect(playerIndex, board, (p,b) -> {
-					trace(eff.getName());
-				});
+				return new PlaceholderEffect(playerIndex, board, efunc);
 			case PROTECT_SELF:
-				return new PlaceholderEffect(playerIndex, board, (p,b) -> {
-					trace(eff.getName());
-				});
+				return new PlaceholderEffect(playerIndex, board, efunc);
 			case PROTECT_OTHER:
-				return new PlaceholderEffect(playerIndex, board, (p,b) -> {
-					trace(eff.getName());
-				});
+				return new PlaceholderEffect(playerIndex, board, efunc);
 		};
 	}
 	

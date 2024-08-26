@@ -30,7 +30,17 @@ class Board{
 	public function drawCard(){
 		var list = CardEffect.createAll();
 		var effIndex = Math.floor(Math.random() * list.length);
-		return new Card([list[effIndex]]);
+		var qty = 1;
+
+		var qtyRand = Math.random();
+		if(qtyRand < 0.25){
+			qty++;
+		}
+		if(qtyRand < 0.12){
+			qty++;
+		}
+
+		return new Card([for(i in 0...qty) list[effIndex]]);
 	}
 
 	public function resetShop(){

@@ -43,5 +43,12 @@ class Button extends Region{
 		Main.context.strokeStyle = "#fff";
 		Main.context.strokeText(label, x + (w / 2 - textWidth / 2), y + h * 0.7, w);
 		Main.context.fillText(label, x + (w / 2 - textWidth / 2), y + h * 0.7, w);
+
+		if(!enabled){
+			Main.context.strokeStyle = "#000";
+			Main.context.moveTo(x, y + h / 2);
+			Main.context.lineTo(x + w, y + h / 2);
+			Main.context.stroke();
+		}
 	}
 }

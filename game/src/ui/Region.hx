@@ -14,6 +14,7 @@ class Region{
 	public var clicked(default, null):Bool = false;
 
 	public var onClick:Void->Void;
+	public var enabled:Bool = true;
 
 	public function new(x:Float, y:Float, w:Float, h:Float){
 		this.x = x;
@@ -26,7 +27,7 @@ class Region{
 		state = STATE_NORMAL;
 		clicked = false;
 
-		if(!(Pointer.X < x || Pointer.Y < y || Pointer.X > x + w || Pointer.Y > y + h)){
+		if(enabled && !(Pointer.X < x || Pointer.Y < y || Pointer.X > x + w || Pointer.Y > y + h)){
 			state = Pointer.DOWN ? STATE_DOWN : STATE_OVER;
 			clicked = Pointer.CLICK;
 			
