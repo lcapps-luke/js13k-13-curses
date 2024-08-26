@@ -39,7 +39,7 @@ class CardEffectLibrary{
 		return [
 			ADD_CURSE_OTHER => [30, 20, 10],
 			ADD_CURSE_SELF => [15, 7, 3],
-			REMOVE_CURSE_OTHER => [15, 7, 3],
+			REMOVE_CURSE_OTHER => [10, 5, 2],
 			REMOVE_CURSE_SELF => [20, 10, 5],
 			TAKE_CURSE => [15, 7, 3],
 			GIVE_CURSE => [20, 10, 5],
