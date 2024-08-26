@@ -1,5 +1,8 @@
 package;
 
+import TimerManager.Timer;
+import game.AIPlayer;
+import game.AIAction;
 import game.CardEffectLibrary;
 import ui.effect.PlaceholderEffect;
 import ui.effect.CurseEffect;
@@ -348,9 +351,53 @@ class GameScreen extends AbstractScreen{
 	}
 
 	private function aiTurnPhase(s:Float){
-		//TODO AI
-		//TODO end turn
-		nextTurn();
+		var lastPromise = Promise.resolve();
+		var actions = AIPlayer.getActions(board);
+		for(a in actions){
+			switch(a.type){
+				case BUY:
+					lastPromise = lastPromise.then(n -> {
+						var shopCard = shop[a.index];
+						shopCard.flip();
+						return Tween.start(shopCard, {
+							x: cardHandX(board.players[1].cards.length),
+							y: cardHandY(1)
+						}, 0.5);
+					}).then(t -> {
+						var cardSpr = shop[a.index];
+						board.shop[a.index] = null;
+						shop[a.index] = null;
+						//add card to player
+						board.players[1].cards.push(cardSpr.card);
+						aiHand.push(cardSpr);
+
+						return Promise.resolve();
+					});
+				case PLAY:
+					lastPromise = lastPromise.then(t -> {
+						selectedHandIndex = a.index;
+						return Promise.resolve(a.index);
+					}).then(t -> {
+						return Tween.start(aiHand[selectedHandIndex], {
+							scaleX: 3,
+							scaleY: 3,
+							x: Main.WIDTH / 2 - CardSprite.WIDTH / 2,
+							y: Main.HEIGHT / 2 - (CardSprite.HEIGHT * 3) / 2
+						}, 0.2);
+					}).then(t -> return WaitTimer.sec(0.5))
+						.then(t -> {
+							var cardSpr = aiHand[selectedHandIndex];
+							return Tween.start(cardSpr, { scaleX: 0, scaleY: 0, y:Main.HEIGHT / 2 }, 0.5);
+						})
+						.then(t -> {
+							var cardSpr = aiHand[selectedHandIndex];
+							return playCard(1, cardSpr);
+						});
+				case END: lastPromise.then(r -> nextTurn());
+			}
+		}
+
+		setPhase();
 	}
 
 	private function playerTurnPhase(s:Float){
@@ -446,7 +493,7 @@ class GameScreen extends AbstractScreen{
 
 			if(buyButton.clicked){
 				phaseStep = -1;
-				board.players[0].points -= 4;
+				board.players[0].points -= shop[selectedHandIndex].card.cost;
 
 				var cardSpr = shop[selectedHandIndex];
 				var nextPlayerHandIndex = playerHand.length;
