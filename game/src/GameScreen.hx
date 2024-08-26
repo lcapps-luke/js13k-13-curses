@@ -1,8 +1,8 @@
 package;
 
-import TimerManager.Timer;
+import ui.TextSprite;
+import ui.Sprite;
 import game.AIPlayer;
-import game.AIAction;
 import game.CardEffectLibrary;
 import ui.effect.PlaceholderEffect;
 import ui.effect.CurseEffect;
@@ -32,10 +32,16 @@ class GameScreen extends AbstractScreen{
 	private static inline var PLAYER_TURN_WAIT = 0;
 	private static inline var PLAYER_TURN_SHOW_HAND = 1;
 	private static inline var PLAYER_TURN_SHOW_SHOP = 2;
+	private static inline var END_SETUP = 0;
+	private static inline var END_WAIT = 1;
 
 	private static inline var PLAYER_HAND_Y:Float = 1520;
 	private static inline var SHOP_SLOT_WIDTH:Float = CardSprite.WIDTH + 25;
 	private static inline var SHOP_START_X:Float = Main.WIDTH / 2 - (SHOP_SLOT_WIDTH * Board.SHOP_SIZE) / 2;
+	private static inline var CURSE_SLOT_SIZE:Float = Main.WIDTH / 16;
+	private static inline var CURSE_SLOT_MARGIN:Float = 3;
+	private static inline var CURSE_SLOT_RADIUS:Float = (CURSE_SLOT_SIZE - CURSE_SLOT_MARGIN * 2) / 2;
+	
 
 	private var board = new Board();
 
@@ -66,6 +72,9 @@ class GameScreen extends AbstractScreen{
 	private var buyButton:Button;
 
 	private var currentEffect:CardEffectSprite = null;
+
+	private var gameOverSprites= new Array<Sprite>();
+	private var endGameButton:Button;
 
 	public function new(){
 		super();
@@ -101,6 +110,9 @@ class GameScreen extends AbstractScreen{
 
 		buyButton = new Button("Buy", "40px sans-serif", 0, Main.HEIGHT * 0.6, -1, 130);
 		buyButton.x = Main.WIDTH - (playBackSpace / 2 - playButton.w / 2) - playButton.w;
+
+		endGameButton = new Button("Restart", "100px sans-serif", 0, Main.HEIGHT * 0.65, -1, 120);
+		endGameButton.x = Main.WIDTH / 2 - endGameButton.w / 2;
 	}
 
 	override function update(s:Float) {
@@ -151,30 +163,40 @@ class GameScreen extends AbstractScreen{
 		Main.context.strokeStyle = "#000";
 		Main.context.fillStyle="#fff";
 		Main.context.lineWidth = 3;
-		var curseSlotSize = Main.WIDTH / 16;
-		var curseSlotRadius = (curseSlotSize - 6) / 2;
+
 		for(i in 0...16){
 			var e = i == 12;
 
 			//AI
 			Main.context.fillStyle = i < board.players[1].curses ? "#f0f" : "#fff";
 			Main.context.beginPath();
-			Main.context.ellipse(curseSlotSize * i + 3 + curseSlotRadius, curseSlotRadius + 13, curseSlotRadius, curseSlotRadius, 0, 0, Math.PI * 2);
+			Main.context.ellipse(CURSE_SLOT_SIZE * i + CURSE_SLOT_MARGIN + CURSE_SLOT_RADIUS, CURSE_SLOT_RADIUS + 13, CURSE_SLOT_RADIUS, CURSE_SLOT_RADIUS, 0, 0, Math.PI * 2);
 			Main.context.stroke();
 			Main.context.fill();
 
 			//player
 			Main.context.fillStyle = i < board.players[0].curses ? "#f0f" : "#fff";
 			Main.context.beginPath();
-			Main.context.ellipse(curseSlotSize * i + 3 + curseSlotRadius, Main.HEIGHT - curseSlotRadius - 13, curseSlotRadius, curseSlotRadius, 0, 0, Math.PI * 2);
+			Main.context.ellipse(CURSE_SLOT_SIZE * i + CURSE_SLOT_MARGIN + CURSE_SLOT_RADIUS, Main.HEIGHT - CURSE_SLOT_RADIUS - 13, CURSE_SLOT_RADIUS, CURSE_SLOT_RADIUS, 0, 0, Math.PI * 2);
 			Main.context.stroke();
 			Main.context.fill();
+
+			if(i == 12){
+				var sz = CURSE_SLOT_RADIUS * 1.5;
+				Main.context.font = '${sz}px sans-serif';
+				Main.context.centeredText("☠", CURSE_SLOT_SIZE * i, CURSE_SLOT_SIZE, CURSE_SLOT_RADIUS + sz * 0.6, false, true);
+				Main.context.centeredText("☠", CURSE_SLOT_SIZE * i, CURSE_SLOT_SIZE, Main.HEIGHT - CURSE_SLOT_RADIUS - sz * 0, false, true);
+			}
 			
 		}
 
 		phaseFunc(s);
 
 		currentEffect?.update(s);
+
+		for(gos in gameOverSprites){
+			gos.update(s);
+		}
 	}
 
 	private function setPhase(p:Float->Void = null){
@@ -393,7 +415,13 @@ class GameScreen extends AbstractScreen{
 							var cardSpr = aiHand[selectedHandIndex];
 							return playCard(1, cardSpr);
 						});
-				case END: lastPromise.then(r -> nextTurn());
+				case END: lastPromise.then(r -> {
+					if(board.gameOver()){
+						setPhase(gameEndPhase);
+					}else{
+						nextTurn();
+					}
+				});
 			}
 		}
 
@@ -472,7 +500,13 @@ class GameScreen extends AbstractScreen{
 				var cardSpr = playerHand[selectedHandIndex];
 				Tween.start(cardSpr, { scaleX: 0, scaleY: 0, y:Main.HEIGHT / 2 }, 0.5)
 					.then(t -> {return playCard(0, cardSpr);})
-					.then(t -> {phaseStep = PLAYER_TURN_WAIT;});
+					.then(t -> {
+						if(board.gameOver()){
+							setPhase(gameEndPhase);
+						}else{
+							phaseStep = PLAYER_TURN_WAIT;
+						}
+					});
 			}
 		}
 
@@ -534,7 +568,7 @@ class GameScreen extends AbstractScreen{
 			ownHand.remove(spr);
 			board.players[playerIndex].cards.remove(spr.card);
 
-			return new Promise((res, rej) -> {
+			//return new Promise((res, rej) -> {
 				var lastTween:Promise<Tween> = Promise.resolve();
 
 				for(c in ownHand){
@@ -546,8 +580,8 @@ class GameScreen extends AbstractScreen{
 					});
 				}
 
-				lastTween.then(t -> res(null));
-			});
+				return lastTween;//.then(t -> res(null));
+			//});
 		});
 	}
 	
@@ -599,6 +633,42 @@ class GameScreen extends AbstractScreen{
 			setPhase(chooseLeaderPhase);
 		}else{
 			setPhase(startTurnPhase);
+		}
+	}
+
+	private function gameEndPhase(s:Float){
+		if(phaseStep == END_SETUP){
+			phaseStep = -1;
+			var winner = board.getWinner();
+
+			var sy = winner == 0 ? (CURSE_SLOT_RADIUS + 13) : (Main.HEIGHT - CURSE_SLOT_RADIUS - 13);
+			var sx = CURSE_SLOT_SIZE * 12 + CURSE_SLOT_MARGIN;
+
+			var skull = new TextSprite(sx, sy, "☠", CURSE_SLOT_RADIUS * 1.5, "#fff");
+			gameOverSprites.push(skull);
+
+			var text = new TextSprite(Main.WIDTH, Main.HEIGHT / 2 - 100, winner == 0 ? "You Win!" : "You Lose!", 150, "#000");
+			gameOverSprites.push(text);
+
+			Tween.start(skull, {
+				scaleX: 3,
+				scaleY: 3,
+				a: 0,
+				x: sx - skull.w * 0.8,
+				//y: sy - skull.h * 1.5
+			}, 1).then(t -> {
+				return Tween.start(text, {x: Main.WIDTH / 2 - text.w / 2}, 0.5);
+			}).then(t -> {
+				phaseStep = END_WAIT;
+			});
+		}
+		
+		if(phaseStep == END_WAIT){
+			endGameButton.update(s);
+			if(endGameButton.clicked){
+				phaseStep = -1;
+				Main.currentScreen = new MainMenuScreen();
+			}
 		}
 	}
 

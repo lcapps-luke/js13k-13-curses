@@ -37,4 +37,18 @@ class Board{
 			shop.push(drawCard());
 		}
 	}
+
+	public function gameOver(){
+		return players[0].curses == 13 || players[1].curses == 13;
+	}
+
+	public function getWinner(){
+		if(players[0].curses == 13){
+			return 1;
+		}else if(players[1].curses == 13){
+			return 0;
+		}else{
+			return -1;
+		}
+	}
 }

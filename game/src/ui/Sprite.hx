@@ -7,6 +7,7 @@ abstract class Sprite{
 	public var h:Float;
 	public var scaleX:Float = 1;
 	public var scaleY:Float = 1;
+	public var a:Float = 1;
 
 	public function new(x:Float, y:Float, w:Float, h:Float){
 		this.x = x;
