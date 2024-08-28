@@ -1,5 +1,7 @@
 package ui;
 
+import js.html.ImageBitmap;
+import js.html.ImageData;
 import js.lib.Promise;
 import game.Card;
 
@@ -10,26 +12,23 @@ class CardSprite extends Sprite{
 	public static inline var HEIGHT = 280;
 
 	public var card(default,null):Card;
+	private var imgFront:ImageBitmap = null;
+	private var imgBack:ImageBitmap = null;
 
-	private var faceDown:Bool = false;
+	private var faceDown:Bool = true;
 
 	public function new(card:Card, x:Float, y:Float, faceDown:Bool = true){
 		super(x, y, WIDTH, HEIGHT);
 		this.card = card;
+		
+		imgBack = CardImageRepository.getBack();
+		imgFront = CardImageRepository.getImage(card);
 	}
 
 	public function update(s:Float) {
-		Main.context.lineWidth = 3;
-		Main.context.strokeStyle = "#000";
-		Main.context.fillStyle = faceDown ? "#f00" : "#00f";
-		Main.context.roundRect(x + (w - scaleX * w) / 2, y, w * scaleX, h * scaleY, 5, true);
-
-		Main.context.lineWidth = 1;
-		Main.context.font = "15px sans-serif";
-		Main.context.strokeStyle = "#fff";
-		Main.context.fillStyle = "#000";
-		var name = card.getEffects()[0].getName();
-		Main.context.centeredText(name, x, w, y + (h * scaleY) / 2, true, true);
+		if(imgBack != null && imgFront != null){
+			Main.context.drawImage(faceDown ? imgBack : imgFront, 0, 0, imgBack.width, imgBack.height, x + (w - scaleX * w) / 2, y, w * scaleX, h * scaleY);
+		}
 	}
 
 	public function flip():Promise<Tween>{

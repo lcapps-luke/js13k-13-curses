@@ -1,7 +1,7 @@
 package game;
 
 class Card{
-	private var effects:Array<CardEffect>;
+	public var effects(default, null):Array<CardEffect>;
 	public var cost(default, null):Int = 0;
 
 	public function new(effects:Array<CardEffect>){
@@ -10,10 +10,6 @@ class Card{
 			cost += CardEffectLibrary.getEffectCost(e);
 		}
 	};
-
-	public function getEffects():Array<CardEffect>{
-		return effects;
-	}
 
 	public function canPlay(self:Player, other:Player):Bool{
 		var sc = self.copy();
@@ -24,5 +20,9 @@ class Card{
 		}
 
 		return sc.validState() && oc.validState();
+	}
+
+	public function getSerial():String{
+		return StringTools.lpad(Std.string(effects[0].getIndex()), "0", 2) + "-x" + Std.string(effects.length);
 	}
 }

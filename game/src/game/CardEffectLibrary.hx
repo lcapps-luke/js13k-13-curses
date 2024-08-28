@@ -35,7 +35,7 @@ class CardEffectLibrary{
 		}
 	}
 
-	private static function getDeck():Map<CardEffect,Array<Int>>{
+	public static function getDeck():Map<CardEffect,Array<Int>>{
 		return [
 			ADD_CURSE_OTHER => [30, 20, 10],
 			ADD_CURSE_SELF => [15, 7, 3],

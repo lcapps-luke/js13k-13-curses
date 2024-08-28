@@ -380,7 +380,6 @@ class GameScreen extends AbstractScreen{
 				case BUY:
 					lastPromise = lastPromise.then(n -> {
 						var shopCard = shop[a.index];
-						shopCard.flip();
 						return Tween.start(shopCard, {
 							x: cardHandX(board.players[1].cards.length),
 							y: cardHandY(1)
@@ -393,19 +392,21 @@ class GameScreen extends AbstractScreen{
 						board.players[1].cards.push(cardSpr.card);
 						aiHand.push(cardSpr);
 
-						return Promise.resolve();
+						return cardSpr.flip();
 					});
 				case PLAY:
 					lastPromise = lastPromise.then(t -> {
 						selectedHandIndex = a.index;
 						return Promise.resolve(a.index);
 					}).then(t -> {
-						return Tween.start(aiHand[selectedHandIndex], {
-							scaleX: 3,
-							scaleY: 3,
-							x: Main.WIDTH / 2 - CardSprite.WIDTH / 2,
-							y: Main.HEIGHT / 2 - (CardSprite.HEIGHT * 3) / 2
-						}, 0.2);
+						return aiHand[selectedHandIndex].flip().then(t -> {
+							return Tween.start(aiHand[selectedHandIndex], {
+								scaleX: 3,
+								scaleY: 3,
+								x: Main.WIDTH / 2 - CardSprite.WIDTH / 2,
+								y: Main.HEIGHT / 2 - (CardSprite.HEIGHT * 3) / 2
+							}, 0.2);
+						});
 					}).then(t -> return WaitTimer.sec(0.5))
 						.then(t -> {
 							var cardSpr = aiHand[selectedHandIndex];
@@ -462,7 +463,7 @@ class GameScreen extends AbstractScreen{
 					continue;
 				}
 
-				sb.update();
+				sb.update(s);
 				if(sb.clicked){
 					phaseStep = -1;
 					selectedHandIndex = sb.cardIndex;
@@ -553,7 +554,7 @@ class GameScreen extends AbstractScreen{
 	private function playCard(playerIndex:Int, spr:CardSprite):Promise<Dynamic>{
 		// get change from card
 		var lastEffect = Promise.resolve();
-		for(i in spr.card.getEffects()){
+		for(i in spr.card.effects){
 			var eff = createCardEffect(i, playerIndex);
 			lastEffect = lastEffect.then(r -> {
 				currentEffect = eff;
@@ -568,20 +569,18 @@ class GameScreen extends AbstractScreen{
 			ownHand.remove(spr);
 			board.players[playerIndex].cards.remove(spr.card);
 
-			//return new Promise((res, rej) -> {
-				var lastTween:Promise<Tween> = Promise.resolve();
+			var lastTween:Promise<Tween> = Promise.resolve();
 
-				for(c in ownHand){
-					lastTween = lastTween.then(t -> {
-						var idx = board.players[playerIndex].cards.indexOf(c.card);
-						return Tween.start(c, {
-							x: cardHandX(idx)
-						}, 0.5);
-					});
-				}
+			for(c in ownHand){
+				lastTween = lastTween.then(t -> {
+					var idx = board.players[playerIndex].cards.indexOf(c.card);
+					return Tween.start(c, {
+						x: cardHandX(idx)
+					}, 0.5);
+				});
+			}
 
-				return lastTween;//.then(t -> res(null));
-			//});
+			return lastTween;
 		});
 	}
 	

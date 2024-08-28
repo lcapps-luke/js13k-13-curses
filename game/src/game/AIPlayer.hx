@@ -67,7 +67,7 @@ class AIPlayer{
 	}
 
 	private static function isOffensive(card:Card){
-		return switch(card.getEffects()[0]){
+		return switch(card.effects[0]){
 			case ADD_CURSE_OTHER: true;
 			case GIVE_CURSE: true;
 			case SEAL_OTHER_CURSE: true;
@@ -81,7 +81,7 @@ class AIPlayer{
 		var sc = self.copy();
 		var oc = other.copy();
 		
-		for(e in h.getEffects()){
+		for(e in h.effects){
 			CardEffectLibrary.getEffectFunction(e)(sc, oc);
 		}
 
