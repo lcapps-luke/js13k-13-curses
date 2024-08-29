@@ -20,15 +20,15 @@ class Player{
 	}
 
 	public function addPoints(p:Int) {
-		points += p * getPointsMultiplier();
+		points += p * getPointsMultiplier(curses);
 	}
 
-	public function getPointsMultiplier():Int{
-		if(curses > 13){
+	public static function getPointsMultiplier(c:Int):Int{
+		if(c > 13){
 			return 4;
-		}else if(curses > 9){
+		}else if(c > 9){
 			return 3;
-		}else if(curses > 6){
+		}else if(c > 6){
 			return 2;
 		}
 		return 1;

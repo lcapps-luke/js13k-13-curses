@@ -2,7 +2,7 @@ package;
 
 
 abstract class AbstractScreen{
-	private var backgroundStyle:String = "#fff";
+	private var backgroundStyle:String = "#094";
 
 	public function new(){}
 

@@ -1,5 +1,6 @@
 package;
 
+import game.Player;
 import ui.TextSprite;
 import ui.Sprite;
 import game.AIPlayer;
@@ -121,14 +122,15 @@ class GameScreen extends AbstractScreen{
 		super.update(s);
 
 		//render BG
-		Main.context.strokeStyle = "#777";
-		Main.context.fillStyle="#fff";
-		Main.context.lineWidth = 3;
+		Main.context.strokeStyle = "#ccc";
+		Main.context.fillStyle="#094";
+		Main.context.lineWidth = 8;
 		Main.context.beginPath();
 		Main.context.moveTo(0, Main.HEIGHT / 2);
 		Main.context.lineTo(Main.WIDTH, Main.HEIGHT / 2);
 		Main.context.stroke();
 
+		Main.context.lineWidth = 4;
 		var shopSlotWidth = CardSprite.WIDTH + 25;
 		var startX = Main.WIDTH / 2 - (shopSlotWidth * Board.SHOP_SIZE) / 2;
 		for(i in 0...3){
@@ -176,24 +178,32 @@ class GameScreen extends AbstractScreen{
 			var e = i == 12;
 
 			//AI
-			Main.context.fillStyle = i < board.players[1].curses ? "#f0f" : "#fff";
+			Main.context.fillStyle = i < board.players[1].curses ? "#f0f" : "#094";
 			Main.context.beginPath();
 			Main.context.ellipse(CURSE_SLOT_SIZE * i + CURSE_SLOT_MARGIN + CURSE_SLOT_RADIUS, CURSE_SLOT_RADIUS + 13, CURSE_SLOT_RADIUS, CURSE_SLOT_RADIUS, 0, 0, Math.PI * 2);
 			Main.context.stroke();
 			Main.context.fill();
 
 			//player
-			Main.context.fillStyle = i < board.players[0].curses ? "#f0f" : "#fff";
+			Main.context.fillStyle = i < board.players[0].curses ? "#f0f" : "#094";
 			Main.context.beginPath();
 			Main.context.ellipse(CURSE_SLOT_SIZE * i + CURSE_SLOT_MARGIN + CURSE_SLOT_RADIUS, Main.HEIGHT - CURSE_SLOT_RADIUS - 13, CURSE_SLOT_RADIUS, CURSE_SLOT_RADIUS, 0, 0, Math.PI * 2);
 			Main.context.stroke();
 			Main.context.fill();
 
+			Main.context.fillStyle = "#fff";
+			var sz = CURSE_SLOT_RADIUS * 1.5;
+			Main.context.font = '${sz}px sans-serif';
+			var mult = Player.getPointsMultiplier(i + 1);
+
 			if(i == 12){
-				var sz = CURSE_SLOT_RADIUS * 1.5;
 				Main.context.font = '${sz}px sans-serif';
-				Main.context.centeredText("☠", CURSE_SLOT_SIZE * i, CURSE_SLOT_SIZE, CURSE_SLOT_RADIUS + sz * 0.6, false, true);
-				Main.context.centeredText("☠", CURSE_SLOT_SIZE * i, CURSE_SLOT_SIZE, Main.HEIGHT - CURSE_SLOT_RADIUS - sz * 0, false, true);
+				Main.context.centeredText("☠", CURSE_SLOT_SIZE * i, CURSE_SLOT_SIZE, CURSE_SLOT_RADIUS + sz * 0.6);
+				Main.context.centeredText("☠", CURSE_SLOT_SIZE * i, CURSE_SLOT_SIZE, Main.HEIGHT - CURSE_SLOT_RADIUS - sz * 0);
+			}else if(mult > 1){
+				Main.context.font = '${sz * 0.8}px sans-serif';
+				Main.context.centeredText('${mult}X', CURSE_SLOT_SIZE * i, CURSE_SLOT_SIZE, CURSE_SLOT_RADIUS + sz * 0.6);
+				Main.context.centeredText('${mult}X', CURSE_SLOT_SIZE * i, CURSE_SLOT_SIZE, Main.HEIGHT - CURSE_SLOT_RADIUS - sz * 0);
 			}
 			
 		}

@@ -29,9 +29,9 @@ class Button extends Region{
 
 		Main.context.strokeStyle = "#000";
 		Main.context.fillStyle= switch(state){
-			case Region.STATE_OVER: "#aaa";
-			case Region.STATE_DOWN: "#555";
-			default: "#fff";
+			case Region.STATE_OVER: "#0c4";
+			case Region.STATE_DOWN: "#084";
+			default: "#094";
 		}
 		Main.context.roundRect(x, y, w, h, 10, true, true);
 
@@ -41,7 +41,7 @@ class Button extends Region{
 
 		Main.context.fillStyle = "#000";
 		Main.context.strokeStyle = "#fff";
-		Main.context.strokeText(label, x + (w / 2 - textWidth / 2), y + h * 0.7, w);
+		//Main.context.strokeText(label, x + (w / 2 - textWidth / 2), y + h * 0.7, w);
 		Main.context.fillText(label, x + (w / 2 - textWidth / 2), y + h * 0.7, w);
 
 		if(!enabled){
