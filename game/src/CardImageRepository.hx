@@ -1,5 +1,6 @@
 package;
 
+import game.CardEffectLibrary;
 import game.CardEffect;
 import js.lib.Promise;
 import ui.CardSprite;
@@ -114,9 +115,9 @@ class CardImageRepository {
 			case ADD_CURSE_SELF: 'Add ${qty} Curse${p} to_yourself'; //Add x Curses to yourself
 			case REMOVE_CURSE_SELF: 'Remove ${qty} Curse${p}_from yourself'; //Remove x Curses from_yourself
 			case TAKE_CURSE: 'Take ${qty} Curse${p} from_your opponent to_yourself'; //Take x Curses from your opponent to yourself
-			case GIVE_CURSE: 'Give ${qty} of your_Curse${p} to your_opponent'; //Give x of your Curses to your opponent
-			case GAIN_POINT: 'Gain ${qty} Point${p}'; //Gain x Points
-			case REMOVE_POINT: 'Remove ${qty} Point${p}_from your opponent'; //Remove x Points from your opponent
+			case GIVE_CURSE: 'Give ${qty} of your_Curses to your_opponent'; //Give x of your Curses to your opponent
+			case GAIN_POINT: 'Gain ${qty * CardEffectLibrary.POINTS_EFFECT_QTY} Points'; //Gain x Points
+			case REMOVE_POINT: 'Remove ${qty * CardEffectLibrary.POINTS_EFFECT_REMOVE_QTY} Points_from your opponent'; //Remove x Points from your opponent
 			case SEAL_OWN_CURSE: ce.getName();
 			case SEAL_OTHER_CURSE: ce.getName();
 			case PROTECT_SELF: ce.getName();
@@ -129,10 +130,32 @@ class CardImageRepository {
 
 		d.clearRect(0, 0, WIDTH, HEIGHT);
 
+		// border background
 		d.lineWidth = 9;
 		d.strokeStyle = "#000";
 		d.fillStyle = "#888";
-		d.roundRect(5, 5, WIDTH-10, HEIGHT-10, 15, true);
+		d.roundRect(5, 5, WIDTH-10, HEIGHT-10, 30, true);
+
+		// background
+		d.fillStyle = "#bbb";
+		d.roundRect(40, 40, WIDTH-80, HEIGHT-80, 15, true, false);
+
+		// text
+		d.font = "100px sans-serif";
+		d.fillStyle = "#555";
+		d.centeredText("13", 0, WIDTH, HEIGHT / 2 - 30, true);
+		d.centeredText("Curses", 0, WIDTH, HEIGHT / 2 + 100, true);
+
+		for(i in 0...13){
+			var a = ((Math.PI * 2) / 13) * i;
+			var cx = WIDTH / 2 + Math.cos(a) * (WIDTH * 0.4);
+			var cy = HEIGHT / 2 + Math.sin(a) * (WIDTH * 0.4);
+
+			d.fillStyle = "#85a";
+			d.beginPath();
+			d.ellipse(cx, cy, 20, 20, 0, 0, Math.PI * 2);
+			d.fill();
+		}
 
 		var b = d.getImageData(0, 0, WIDTH, HEIGHT);
 

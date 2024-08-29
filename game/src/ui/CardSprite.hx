@@ -1,7 +1,6 @@
 package ui;
 
 import js.html.ImageBitmap;
-import js.html.ImageData;
 import js.lib.Promise;
 import game.Card;
 

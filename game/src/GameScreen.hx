@@ -76,6 +76,8 @@ class GameScreen extends AbstractScreen{
 	private var gameOverSprites= new Array<Sprite>();
 	private var endGameButton:Button;
 
+	private var focusCard:CardSprite = null;
+
 	public function new(){
 		super();
 		phaseFunc = gameStartPhase;
@@ -118,7 +120,7 @@ class GameScreen extends AbstractScreen{
 	override function update(s:Float) {
 		super.update(s);
 
-		//TODO render BG
+		//render BG
 		Main.context.strokeStyle = "#777";
 		Main.context.fillStyle="#fff";
 		Main.context.lineWidth = 3;
@@ -133,33 +135,39 @@ class GameScreen extends AbstractScreen{
 			Main.context.roundRect(startX + shopSlotWidth * i, Main.HEIGHT / 2 - CardSprite.HEIGHT / 2, CardSprite.WIDTH, CardSprite.HEIGHT, 5, true, true);
 		}
 
-		//TODO render round number
+		//render round number
 		Main.context.fillStyle="#000";
 		Main.context.font = "40px sans-serif";
 		Main.context.centeredText('Round $round', 0, startX, Main.HEIGHT / 2 - 60);
 
-		//TODO render points
+		//render points
 		Main.context.font = "100px sans-serif";
 		Main.context.centeredText(Std.string(board.players[0].points), 0, startX, Main.HEIGHT / 2 + 100);
 
 		Main.context.font = "100px sans-serif";
 		Main.context.centeredText(Std.string(board.players[1].points), startX + shopSlotWidth * 3 - 12.5, startX, Main.HEIGHT / 2 - 30);
 
-		//TODO render shop
+		//render shop
 		for(c in shop){
-			c?.update(s);
+			if(c != null && c != focusCard){
+				c.update(s);
+			}
 		}
 
-		//TODO render player hands
+		//render player hands
 		for(c in playerHand){
-			c.update(s);
+			if(c != focusCard){
+				c.update(s);
+			}
 		}
 		for(c in aiHand){
-			c.update(s);
+			if(c != focusCard){
+				c.update(s);
+			}
 		}
 
 
-		//TODO render curses
+		//render curses
 		Main.context.strokeStyle = "#000";
 		Main.context.fillStyle="#fff";
 		Main.context.lineWidth = 3;
@@ -192,6 +200,7 @@ class GameScreen extends AbstractScreen{
 
 		phaseFunc(s);
 
+		focusCard?.update(s);
 		currentEffect?.update(s);
 
 		for(gos in gameOverSprites){
@@ -354,7 +363,7 @@ class GameScreen extends AbstractScreen{
 			phaseStep = ROLL_DICE_END;
 
 			dice.roll().then(p -> {
-				board.players[playerTurn].points += p;
+				board.players[playerTurn].addPoints(p);
 				return WaitTimer.sec(0.5);
 			}).then(t -> {
 				return Tween.start(dice, {x:Main.WIDTH}, 0.5);
@@ -380,6 +389,7 @@ class GameScreen extends AbstractScreen{
 				case BUY:
 					lastPromise = lastPromise.then(n -> {
 						var shopCard = shop[a.index];
+						board.players[1].points -= shopCard.card.cost;
 						return Tween.start(shopCard, {
 							x: cardHandX(board.players[1].cards.length),
 							y: cardHandY(1)
@@ -400,6 +410,7 @@ class GameScreen extends AbstractScreen{
 						return Promise.resolve(a.index);
 					}).then(t -> {
 						return aiHand[selectedHandIndex].flip().then(t -> {
+							focusCard = aiHand[selectedHandIndex];
 							return Tween.start(aiHand[selectedHandIndex], {
 								scaleX: 3,
 								scaleY: 3,
@@ -448,6 +459,7 @@ class GameScreen extends AbstractScreen{
 
 					playButton.enabled = playerHand[selectedHandIndex].card.canPlay(board.players[0], board.players[1]);
 
+					focusCard = playerHand[selectedHandIndex];
 					Tween.start(playerHand[selectedHandIndex], {
 						scaleX: 3,
 						scaleY: 3,
@@ -457,7 +469,7 @@ class GameScreen extends AbstractScreen{
 				}
 			}
 			
-			//TODO shop cards
+			//shop cards
 			for(sb in shopButtons){
 				if(shop[sb.cardIndex] == null){
 					continue;
@@ -468,8 +480,9 @@ class GameScreen extends AbstractScreen{
 					phaseStep = -1;
 					selectedHandIndex = sb.cardIndex;
 
-					buyButton.enabled = shop[selectedHandIndex].card.cost <= board.players[0].points;
+					buyButton.enabled = (shop[selectedHandIndex].card.cost <= board.players[0].points && board.players[0].cards.length < 5);
 
+					focusCard = shop[selectedHandIndex];
 					Tween.start(shop[selectedHandIndex], {
 						scaleX: 3,
 						scaleY: 3,
@@ -576,7 +589,7 @@ class GameScreen extends AbstractScreen{
 					var idx = board.players[playerIndex].cards.indexOf(c.card);
 					return Tween.start(c, {
 						x: cardHandX(idx)
-					}, 0.5);
+					}, 0.2);
 				});
 			}
 

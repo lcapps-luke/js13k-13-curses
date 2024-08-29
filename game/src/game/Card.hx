@@ -17,6 +17,7 @@ class Card{
 
 		for(e in effects){
 			CardEffectLibrary.getEffectFunction(e)(sc, oc);
+			//sc.cards.remove(this);
 		}
 
 		return sc.validState() && oc.validState();
