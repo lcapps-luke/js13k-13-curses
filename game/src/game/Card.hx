@@ -1,10 +1,10 @@
 package game;
 
 class Card{
-	public var effects(default, null):Array<CardEffect>;
+	public var effects(default, null):Array<Int>;
 	public var cost(default, null):Int = 0;
 
-	public function new(effects:Array<CardEffect>){
+	public function new(effects:Array<Int>){
 		this.effects = effects;
 		for(e in effects){
 			cost += CardEffectLibrary.getEffectCost(e);
@@ -17,13 +17,12 @@ class Card{
 
 		for(e in effects){
 			CardEffectLibrary.getEffectFunction(e)(sc, oc);
-			//sc.cards.remove(this);
 		}
 
 		return sc.validState() && oc.validState();
 	}
 
 	public function getSerial():String{
-		return StringTools.lpad(Std.string(effects[0].getIndex()), "0", 2) + "-x" + Std.string(effects.length);
+		return StringTools.lpad(Std.string(effects[0]), "0", 2) + "-x" + Std.string(effects.length);
 	}
 }

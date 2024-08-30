@@ -68,11 +68,11 @@ class AIPlayer{
 
 	private static function isOffensive(card:Card){
 		return switch(card.effects[0]){
-			case ADD_CURSE_OTHER: true;
-			case GIVE_CURSE: true;
-			case SEAL_OTHER_CURSE: true;
-			case GAIN_POINT: true;
-			case REMOVE_POINT: true;
+			case CardEffect.ADD_CURSE_OTHER: true;
+			case CardEffect.GIVE_CURSE: true;
+			case CardEffect.SEAL_OTHER_CURSE: true;
+			case CardEffect.GAIN_POINT: true;
+			case CardEffect.REMOVE_POINT: true;
 			default: false;
 		}
 	}

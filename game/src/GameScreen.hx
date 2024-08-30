@@ -607,33 +607,34 @@ class GameScreen extends AbstractScreen{
 		});
 	}
 	
-	function createCardEffect(eff:CardEffect, playerIndex:Int):CardEffectSprite {
+	function createCardEffect(eff:Int, playerIndex:Int):CardEffectSprite {
 		var efunc = CardEffectLibrary.getEffectFunction(eff);
 		return switch(eff){
-			case ADD_CURSE_OTHER:
+			case CardEffect.ADD_CURSE_OTHER:
 				return new CurseEffect(playerIndex, board, efunc);
-			case ADD_CURSE_SELF:
+			case CardEffect.ADD_CURSE_SELF:
 				return new CurseEffect(playerIndex, board, efunc);
-			case REMOVE_CURSE_OTHER:
+			case CardEffect.REMOVE_CURSE_OTHER:
 				return new PlaceholderEffect(playerIndex, board, efunc);
-			case REMOVE_CURSE_SELF:
+			case CardEffect.REMOVE_CURSE_SELF:
 				return new PlaceholderEffect(playerIndex, board, efunc);
-			case TAKE_CURSE:
+			case CardEffect.TAKE_CURSE:
 				return new PlaceholderEffect(playerIndex, board, efunc);
-			case GIVE_CURSE:
+			case CardEffect.GIVE_CURSE:
 				return new PlaceholderEffect(playerIndex, board, efunc);
-			case GAIN_POINT:
+			case CardEffect.GAIN_POINT:
 				return new PlaceholderEffect(playerIndex, board, efunc);
-			case REMOVE_POINT:
+			case CardEffect.REMOVE_POINT:
 				return new PlaceholderEffect(playerIndex, board, efunc);
-			case SEAL_OWN_CURSE:
+			case CardEffect.SEAL_OWN_CURSE:
 				return new PlaceholderEffect(playerIndex, board, efunc);
-			case SEAL_OTHER_CURSE:
+			case CardEffect.SEAL_OTHER_CURSE:
 				return new PlaceholderEffect(playerIndex, board, efunc);
-			case PROTECT_SELF:
+			case CardEffect.PROTECT_SELF:
 				return new PlaceholderEffect(playerIndex, board, efunc);
-			case PROTECT_OTHER:
+			case CardEffect.PROTECT_OTHER:
 				return new PlaceholderEffect(playerIndex, board, efunc);
+			default: null;
 		};
 	}
 	

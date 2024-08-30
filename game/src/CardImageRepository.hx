@@ -90,38 +90,44 @@ class CardImageRepository {
 		});
 	}
 
-	private static function getColour(ce:CardEffect) {
+	private static function getColour(ce:Int) {
 		return switch(ce){
-			case ADD_CURSE_OTHER: "F70";
-			case REMOVE_CURSE_OTHER: "CE0";
-			case ADD_CURSE_SELF: "E48";
-			case REMOVE_CURSE_SELF: "87E";
-			case TAKE_CURSE: "E44";
-			case GIVE_CURSE: "8C4";
-			case GAIN_POINT: "FC0";
-			case REMOVE_POINT: "04F";
-			case SEAL_OWN_CURSE: "888";
-			case SEAL_OTHER_CURSE: "888";
-			case PROTECT_SELF: "888";
-			case PROTECT_OTHER: "888";
+			case CardEffect.ADD_CURSE_OTHER: "F70";
+			case CardEffect.REMOVE_CURSE_OTHER: "CE0";
+			case CardEffect.ADD_CURSE_SELF: "E48";
+			case CardEffect.REMOVE_CURSE_SELF: "87E";
+			case CardEffect.TAKE_CURSE: "E44";
+			case CardEffect.GIVE_CURSE: "8C4";
+			case CardEffect.GAIN_POINT: "FC0";
+			case CardEffect.REMOVE_POINT: "04F";
+			/*
+			case CardEffect.SEAL_OWN_CURSE: "888";
+			case CardEffect.SEAL_OTHER_CURSE: "888";
+			case CardEffect.PROTECT_SELF: "888";
+			case CardEffect.PROTECT_OTHER: "888";
+			*/
+			default: "888";
 		}
 	}
 
-	private static function getDescription(ce:CardEffect, qty:Int) {
+	private static function getDescription(ce:Int, qty:Int) {
 		var p = qty > 1 ? "s":"";
 		return switch(ce){
-			case ADD_CURSE_OTHER: 'Add ${qty} Curse${p} to_your opponent'; //Add x Curses to your opponent
-			case REMOVE_CURSE_OTHER: 'Remove ${qty} Curse${p}_from your opponent'; //Remove x Curses from your opponent
-			case ADD_CURSE_SELF: 'Add ${qty} Curse${p} to_yourself'; //Add x Curses to yourself
-			case REMOVE_CURSE_SELF: 'Remove ${qty} Curse${p}_from yourself'; //Remove x Curses from_yourself
-			case TAKE_CURSE: 'Take ${qty} Curse${p} from_your opponent to_yourself'; //Take x Curses from your opponent to yourself
-			case GIVE_CURSE: 'Give ${qty} of your_Curses to your_opponent'; //Give x of your Curses to your opponent
-			case GAIN_POINT: 'Gain ${qty * CardEffectLibrary.POINTS_EFFECT_QTY} Points'; //Gain x Points
-			case REMOVE_POINT: 'Remove ${qty * CardEffectLibrary.POINTS_EFFECT_REMOVE_QTY} Points_from your opponent'; //Remove x Points from your opponent
-			case SEAL_OWN_CURSE: ce.getName();
-			case SEAL_OTHER_CURSE: ce.getName();
-			case PROTECT_SELF: ce.getName();
-			case PROTECT_OTHER: ce.getName();
+			case CardEffect.ADD_CURSE_OTHER: 'Add ${qty} Curse${p} to_your opponent'; //Add x Curses to your opponent
+			case CardEffect.REMOVE_CURSE_OTHER: 'Remove ${qty} Curse${p}_from your opponent'; //Remove x Curses from your opponent
+			case CardEffect.ADD_CURSE_SELF: 'Add ${qty} Curse${p} to_yourself'; //Add x Curses to yourself
+			case CardEffect.REMOVE_CURSE_SELF: 'Remove ${qty} Curse${p}_from yourself'; //Remove x Curses from_yourself
+			case CardEffect.TAKE_CURSE: 'Take ${qty} Curse${p} from_your opponent to_yourself'; //Take x Curses from your opponent to yourself
+			case CardEffect.GIVE_CURSE: 'Give ${qty} of your_Curses to your_opponent'; //Give x of your Curses to your opponent
+			case CardEffect.GAIN_POINT: 'Gain ${qty * CardEffectLibrary.POINTS_EFFECT_QTY} Points'; //Gain x Points
+			case CardEffect.REMOVE_POINT: 'Remove ${qty * CardEffectLibrary.POINTS_EFFECT_REMOVE_QTY} Points_from your opponent'; //Remove x Points from your opponent
+			/*
+			case CardEffect.SEAL_OWN_CURSE: "";
+			case CardEffect.SEAL_OTHER_CURSE: "";
+			case CardEffect.PROTECT_SELF: "";
+			case CardEffect.PROTECT_OTHER: "";
+			*/
+			default: "";
 		}
 	}
 
