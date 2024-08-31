@@ -100,13 +100,106 @@
 					"colour": "f0f",
 					"size": "3",
 					"x": 5,
-					"y": 5
+					"y": 4
 				}
 			],
 			[
 				{
 					"type": "PATH",
 					"path": [1,6,5,9,9,6],
+					"size":1,
+					"colour":"f0f"
+				},
+				{
+					"type": "STRING",
+					"value": "🔥",
+					"colour": "f0f",
+					"size": "3",
+					"x": 3,
+					"y": 4
+				},
+				{
+					"type": "STRING",
+					"value": "🔥",
+					"colour": "f0f",
+					"size": "3",
+					"x": 7,
+					"y": 4
+				}
+			],
+			[
+				{
+					"type": "PATH",
+					"path": [1,6,5,9,9,6],
+					"size":1,
+					"colour":"f0f"
+				},
+				{
+					"type": "STRING",
+					"value": "🔥",
+					"colour": "f0f",
+					"size": "3",
+					"x": 3,
+					"y": 4
+				},
+				{
+					"type": "STRING",
+					"value": "🔥",
+					"colour": "f0f",
+					"size": "3",
+					"x": 5,
+					"y": 2
+				},
+				{
+					"type": "STRING",
+					"value": "🔥",
+					"colour": "f0f",
+					"size": "3",
+					"x": 7,
+					"y": 4
+				}
+			]
+		]
+	},
+	{
+		"name": "REMOVE_CURSE_OTHER",
+		"deckQty": [10, 5, 2],
+		"cost": 2,
+		"func": "(s, o) -> o.curses--",
+		"colour": "CE0",
+		"faces": [
+			[
+				{
+					"type": "PATH",
+					"path": [1,3,5,0,9,3],
+					"size":1,
+					"colour":"f0f"
+				},
+				{
+					"type": "STRING",
+					"value": "🔥",
+					"colour": "f0f",
+					"size": "3",
+					"x": 5,
+					"y": 5
+				},
+				{
+					"type": "PATH",
+					"path": [2,4,8,8],
+					"size":1,
+					"colour":"000"
+				},
+				{
+					"type": "PATH",
+					"path": [8,4,2,8],
+					"size":1,
+					"colour":"000"
+				}
+			],
+			[
+				{
+					"type": "PATH",
+					"path": [1,3,5,0,9,3],
 					"size":1,
 					"colour":"f0f"
 				},
@@ -125,12 +218,24 @@
 					"size": "3",
 					"x": 7,
 					"y": 5
+				},
+				{
+					"type": "PATH",
+					"path": [2,4,8,8],
+					"size":1,
+					"colour":"000"
+				},
+				{
+					"type": "PATH",
+					"path": [8,4,2,8],
+					"size":1,
+					"colour":"000"
 				}
 			],
 			[
 				{
 					"type": "PATH",
-					"path": [1,6,5,9,9,6],
+					"path": [1,3,5,0,9,3],
 					"size":1,
 					"colour":"f0f"
 				},
@@ -157,55 +262,16 @@
 					"size": "3",
 					"x": 7,
 					"y": 7
-				}
-			]
-		]
-	},
-	{
-		"name": "REMOVE_CURSE_OTHER",
-		"deckQty": [10, 5, 2],
-		"cost": 2,
-		"func": "(s, o) -> o.curses--",
-		"colour": "CE0",
-		"faces": [
-			[
+				},
 				{
 					"type": "PATH",
-					"path": [1,1,9,9],
+					"path": [2,4,8,8],
 					"size":1,
 					"colour":"000"
 				},
 				{
 					"type": "PATH",
-					"path": [1,9,9,1],
-					"size":1,
-					"colour":"000"
-				}
-			],
-			[
-				{
-					"type": "PATH",
-					"path": [1,1,9,9],
-					"size":1,
-					"colour":"000"
-				},
-				{
-					"type": "PATH",
-					"path": [1,9,9,1],
-					"size":1,
-					"colour":"000"
-				}
-			],
-			[
-				{
-					"type": "PATH",
-					"path": [1,1,9,9],
-					"size":1,
-					"colour":"000"
-				},
-				{
-					"type": "PATH",
-					"path": [1,9,9,1],
+					"path": [8,4,2,8],
 					"size":1,
 					"colour":"000"
 				}
@@ -222,13 +288,27 @@
 			[
 				{
 					"type": "PATH",
-					"path": [1,1,9,9],
+					"path": [1,6,5,9,9,6],
+					"size":1,
+					"colour":"f0f"
+				},
+				{
+					"type": "STRING",
+					"value": "🔥",
+					"colour": "f0f",
+					"size": "3",
+					"x": 5,
+					"y": 4
+				},
+				{
+					"type": "PATH",
+					"path": [3,2,7,6],
 					"size":1,
 					"colour":"000"
 				},
 				{
 					"type": "PATH",
-					"path": [1,9,9,1],
+					"path": [7,2,3,6],
 					"size":1,
 					"colour":"000"
 				}
@@ -236,13 +316,35 @@
 			[
 				{
 					"type": "PATH",
-					"path": [1,1,9,9],
+					"path": [1,6,5,9,9,6],
+					"size":1,
+					"colour":"f0f"
+				},
+				{
+					"type": "STRING",
+					"value": "🔥",
+					"colour": "f0f",
+					"size": "3",
+					"x": 3,
+					"y": 4
+				},
+				{
+					"type": "STRING",
+					"value": "🔥",
+					"colour": "f0f",
+					"size": "3",
+					"x": 7,
+					"y": 4
+				},
+				{
+					"type": "PATH",
+					"path": [3,2,7,6],
 					"size":1,
 					"colour":"000"
 				},
 				{
 					"type": "PATH",
-					"path": [1,9,9,1],
+					"path": [7,2,3,6],
 					"size":1,
 					"colour":"000"
 				}
@@ -250,13 +352,43 @@
 			[
 				{
 					"type": "PATH",
-					"path": [1,1,9,9],
+					"path": [1,6,5,9,9,6],
+					"size":1,
+					"colour":"f0f"
+				},
+				{
+					"type": "STRING",
+					"value": "🔥",
+					"colour": "f0f",
+					"size": "3",
+					"x": 3,
+					"y": 4
+				},
+				{
+					"type": "STRING",
+					"value": "🔥",
+					"colour": "f0f",
+					"size": "3",
+					"x": 5,
+					"y": 2
+				},
+				{
+					"type": "STRING",
+					"value": "🔥",
+					"colour": "f0f",
+					"size": "3",
+					"x": 7,
+					"y": 4
+				},
+				{
+					"type": "PATH",
+					"path": [3,2,7,6],
 					"size":1,
 					"colour":"000"
 				},
 				{
 					"type": "PATH",
-					"path": [1,9,9,1],
+					"path": [7,2,3,6],
 					"size":1,
 					"colour":"000"
 				}
@@ -272,44 +404,92 @@
 		"faces": [
 			[
 				{
-					"type": "PATH",
-					"path": [1,1,9,9],
-					"size":1,
-					"colour":"000"
+					"type": "STRING",
+					"value": "🔥",
+					"colour": "f0f",
+					"size": "3",
+					"x": 6,
+					"y": 5
 				},
 				{
 					"type": "PATH",
-					"path": [1,9,9,1],
+					"path": [2,9,2,2],
 					"size":1,
-					"colour":"000"
+					"colour":"f0f"
+				},
+				{
+					"type": "PATH",
+					"path": [1,8,2,9,3,8],
+					"size":1,
+					"colour":"f0f"
 				}
 			],
 			[
 				{
-					"type": "PATH",
-					"path": [1,1,9,9],
-					"size":1,
-					"colour":"000"
+					"type": "STRING",
+					"value": "🔥",
+					"colour": "f0f",
+					"size": "3",
+					"x": 6,
+					"y": 3
+				},
+				{
+					"type": "STRING",
+					"value": "🔥",
+					"colour": "f0f",
+					"size": "3",
+					"x": 6,
+					"y": 7
 				},
 				{
 					"type": "PATH",
-					"path": [1,9,9,1],
+					"path": [2,9,2,2],
 					"size":1,
-					"colour":"000"
+					"colour":"f0f"
+				},
+				{
+					"type": "PATH",
+					"path": [1,8,2,9,3,8],
+					"size":1,
+					"colour":"f0f"
 				}
 			],
 			[
 				{
-					"type": "PATH",
-					"path": [1,1,9,9],
-					"size":1,
-					"colour":"000"
+					"type": "STRING",
+					"value": "🔥",
+					"colour": "f0f",
+					"size": "3",
+					"x": 5,
+					"y": 4
+				},
+				{
+					"type": "STRING",
+					"value": "🔥",
+					"colour": "f0f",
+					"size": "3",
+					"x": 7,
+					"y": 1
+				},
+				{
+					"type": "STRING",
+					"value": "🔥",
+					"colour": "f0f",
+					"size": "3",
+					"x": 7,
+					"y": 7
 				},
 				{
 					"type": "PATH",
-					"path": [1,9,9,1],
+					"path": [2,9,2,2],
 					"size":1,
-					"colour":"000"
+					"colour":"f0f"
+				},
+				{
+					"type": "PATH",
+					"path": [1,8,2,9,3,8],
+					"size":1,
+					"colour":"f0f"
 				}
 			]
 		]
@@ -323,44 +503,92 @@
 		"faces": [
 			[
 				{
-					"type": "PATH",
-					"path": [1,1,9,9],
-					"size":1,
-					"colour":"000"
+					"type": "STRING",
+					"value": "🔥",
+					"colour": "f0f",
+					"size": "3",
+					"x": 6,
+					"y": 5
 				},
 				{
 					"type": "PATH",
-					"path": [1,9,9,1],
+					"path": [2,9,2,2],
 					"size":1,
-					"colour":"000"
+					"colour":"f0f"
+				},
+				{
+					"type": "PATH",
+					"path": [1,3,2,2,3,3],
+					"size":1,
+					"colour":"f0f"
 				}
 			],
 			[
 				{
-					"type": "PATH",
-					"path": [1,1,9,9],
-					"size":1,
-					"colour":"000"
+					"type": "STRING",
+					"value": "🔥",
+					"colour": "f0f",
+					"size": "3",
+					"x": 6,
+					"y": 3
+				},
+				{
+					"type": "STRING",
+					"value": "🔥",
+					"colour": "f0f",
+					"size": "3",
+					"x": 6,
+					"y": 7
 				},
 				{
 					"type": "PATH",
-					"path": [1,9,9,1],
+					"path": [2,9,2,2],
 					"size":1,
-					"colour":"000"
+					"colour":"f0f"
+				},
+				{
+					"type": "PATH",
+					"path": [1,3,2,2,3,3],
+					"size":1,
+					"colour":"f0f"
 				}
 			],
 			[
 				{
-					"type": "PATH",
-					"path": [1,1,9,9],
-					"size":1,
-					"colour":"000"
+					"type": "STRING",
+					"value": "🔥",
+					"colour": "f0f",
+					"size": "3",
+					"x": 5,
+					"y": 4
+				},
+				{
+					"type": "STRING",
+					"value": "🔥",
+					"colour": "f0f",
+					"size": "3",
+					"x": 7,
+					"y": 1
+				},
+				{
+					"type": "STRING",
+					"value": "🔥",
+					"colour": "f0f",
+					"size": "3",
+					"x": 7,
+					"y": 7
 				},
 				{
 					"type": "PATH",
-					"path": [1,9,9,1],
+					"path": [2,9,2,2],
 					"size":1,
-					"colour":"000"
+					"colour":"f0f"
+				},
+				{
+					"type": "PATH",
+					"path": [1,3,2,2,3,3],
+					"size":1,
+					"colour":"f0f"
 				}
 			]
 		]
@@ -374,44 +602,56 @@
 		"faces": [
 			[
 				{
-					"type": "PATH",
-					"path": [1,1,9,9],
-					"size":1,
-					"colour":"000"
+					"type": "STRING",
+					"x": 5,
+					"y": 4,
+					"size":3,
+					"colour":"000",
+					"value": "💰"
 				},
 				{
-					"type": "PATH",
-					"path": [1,9,9,1],
-					"size":1,
-					"colour":"000"
+					"type": "STRING",
+					"x": 5,
+					"y": 7,
+					"size":3,
+					"colour":"000",
+					"value": "+4"
 				}
 			],
 			[
 				{
-					"type": "PATH",
-					"path": [1,1,9,9],
-					"size":1,
-					"colour":"000"
+					"type": "STRING",
+					"x": 5,
+					"y": 4,
+					"size":3,
+					"colour":"000",
+					"value": "💰💰"
 				},
 				{
-					"type": "PATH",
-					"path": [1,9,9,1],
-					"size":1,
-					"colour":"000"
+					"type": "STRING",
+					"x": 5,
+					"y": 7,
+					"size":3,
+					"colour":"000",
+					"value": "+8"
 				}
 			],
 			[
 				{
-					"type": "PATH",
-					"path": [1,1,9,9],
-					"size":1,
-					"colour":"000"
+					"type": "STRING",
+					"x": 5,
+					"y": 4,
+					"size":3,
+					"colour":"000",
+					"value": "💰💰💰"
 				},
 				{
-					"type": "PATH",
-					"path": [1,9,9,1],
-					"size":1,
-					"colour":"000"
+					"type": "STRING",
+					"x": 5,
+					"y": 7,
+					"size":3,
+					"colour":"000",
+					"value": "+12"
 				}
 			]
 		]
@@ -425,44 +665,56 @@
 		"faces": [
 			[
 				{
-					"type": "PATH",
-					"path": [1,1,9,9],
-					"size":1,
-					"colour":"000"
+					"type": "STRING",
+					"x": 5,
+					"y": 6,
+					"size":3,
+					"colour":"000",
+					"value": "💰"
 				},
 				{
-					"type": "PATH",
-					"path": [1,9,9,1],
-					"size":1,
-					"colour":"000"
+					"type": "STRING",
+					"x": 5,
+					"y": 2,
+					"size":3,
+					"colour":"000",
+					"value": "-8"
 				}
 			],
 			[
 				{
-					"type": "PATH",
-					"path": [1,1,9,9],
-					"size":1,
-					"colour":"000"
+					"type": "STRING",
+					"x": 5,
+					"y": 6,
+					"size":3,
+					"colour":"000",
+					"value": "💰💰"
 				},
 				{
-					"type": "PATH",
-					"path": [1,9,9,1],
-					"size":1,
-					"colour":"000"
+					"type": "STRING",
+					"x": 5,
+					"y": 2,
+					"size":3,
+					"colour":"000",
+					"value": "-16"
 				}
 			],
 			[
 				{
-					"type": "PATH",
-					"path": [1,1,9,9],
-					"size":1,
-					"colour":"000"
+					"type": "STRING",
+					"x": 5,
+					"y": 6,
+					"size":3,
+					"colour":"000",
+					"value": "💰💰💰"
 				},
 				{
-					"type": "PATH",
-					"path": [1,9,9,1],
-					"size":1,
-					"colour":"000"
+					"type": "STRING",
+					"x": 5,
+					"y": 2,
+					"size":3,
+					"colour":"000",
+					"value": "-24"
 				}
 			]
 		]

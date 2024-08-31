@@ -186,9 +186,7 @@ class CardImageRepository {
 		d.fillStyle = '#$c';
 		var w = d.measureText(v).width;
 
-		d.strokeText(v, x-w/2, y+z/2);
-
-		//trace('Render string face item "$v" at $x x $y, size: $z, colour: $c');
+		d.fillText(v, x-w/2, y+z/2);
 	}
 
 	private static function renderPathFace(s:String){
@@ -196,8 +194,6 @@ class CardImageRepository {
 		var c = s.substr(0, 3);
 		var z = faceSize(Std.parseInt(s.substr(3,1))) / 2;
 		var p = s.substr(4).split("").map(Std.parseInt).map(facePosX);
-		
-		//trace('Render path face item "$p" size: $z, colour: $c');
 
 		d.lineWidth = z;
 		d.strokeStyle = '#$c';

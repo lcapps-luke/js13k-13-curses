@@ -57,13 +57,8 @@ class AIPlayer{
 			}
 		}
 
-		if(isOffensive(card)){
-			haveOffensive++;
-		}else{
-			haveDefensive++;
-		}
-
-		return (haveOffensive <= 2) && (haveDefensive <= 2);
+		var offensive = isOffensive(card);
+		return (haveOffensive < 3 && offensive) || (haveDefensive < 2 && !offensive);
 	}
 
 	private static function isOffensive(card:Card){
