@@ -14,6 +14,7 @@ class AIPlayer{
 				});
 				
 				self.cards.push(c);
+				self.points -= c.cost;
 			}
 		}
 		
