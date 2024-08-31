@@ -1,0 +1,674 @@
+[
+	{
+		"name": "ADD_CURSE_OTHER",
+		"deckQty": [30, 20, 10],
+		"cost": 3,
+		"func": "(s, o) -> o.curses++",
+		"colour": "F70",
+		"faces": [
+			[
+				{
+					"type": "PATH",
+					"path": [1,3,5,0,9,3],
+					"size":1,
+					"colour":"f0f"
+				},
+				{
+					"type": "STRING",
+					"value": "🔥",
+					"colour": "f0f",
+					"size": "3",
+					"x": 5,
+					"y": 5
+				}
+			],
+			[
+				{
+					"type": "PATH",
+					"path": [1,3,5,0,9,3],
+					"size":1,
+					"colour":"f0f"
+				},
+				{
+					"type": "STRING",
+					"value": "🔥",
+					"colour": "f0f",
+					"size": "3",
+					"x": 3,
+					"y": 5
+				},
+				{
+					"type": "STRING",
+					"value": "🔥",
+					"colour": "f0f",
+					"size": "3",
+					"x": 7,
+					"y": 5
+				}
+			],
+			[
+				{
+					"type": "PATH",
+					"path": [1,3,5,0,9,3],
+					"size":1,
+					"colour":"f0f"
+				},
+				{
+					"type": "STRING",
+					"value": "🔥",
+					"colour": "f0f",
+					"size": "3",
+					"x": 3,
+					"y": 7
+				},
+				{
+					"type": "STRING",
+					"value": "🔥",
+					"colour": "f0f",
+					"size": "3",
+					"x": 5,
+					"y": 5
+				},
+				{
+					"type": "STRING",
+					"value": "🔥",
+					"colour": "f0f",
+					"size": "3",
+					"x": 7,
+					"y": 7
+				}
+			]
+		]
+	},
+	{
+		"name": "ADD_CURSE_SELF",
+		"deckQty": [15, 7, 3],
+		"cost": 2,
+		"func": "(s, o) -> s.curses++",
+		"colour": "E48",
+		"faces": [
+			[
+				{
+					"type": "PATH",
+					"path": [1,6,5,9,9,6],
+					"size":1,
+					"colour":"f0f"
+				},
+				{
+					"type": "STRING",
+					"value": "🔥",
+					"colour": "f0f",
+					"size": "3",
+					"x": 5,
+					"y": 5
+				}
+			],
+			[
+				{
+					"type": "PATH",
+					"path": [1,6,5,9,9,6],
+					"size":1,
+					"colour":"f0f"
+				},
+				{
+					"type": "STRING",
+					"value": "🔥",
+					"colour": "f0f",
+					"size": "3",
+					"x": 3,
+					"y": 5
+				},
+				{
+					"type": "STRING",
+					"value": "🔥",
+					"colour": "f0f",
+					"size": "3",
+					"x": 7,
+					"y": 5
+				}
+			],
+			[
+				{
+					"type": "PATH",
+					"path": [1,6,5,9,9,6],
+					"size":1,
+					"colour":"f0f"
+				},
+				{
+					"type": "STRING",
+					"value": "🔥",
+					"colour": "f0f",
+					"size": "3",
+					"x": 3,
+					"y": 7
+				},
+				{
+					"type": "STRING",
+					"value": "🔥",
+					"colour": "f0f",
+					"size": "3",
+					"x": 5,
+					"y": 5
+				},
+				{
+					"type": "STRING",
+					"value": "🔥",
+					"colour": "f0f",
+					"size": "3",
+					"x": 7,
+					"y": 7
+				}
+			]
+		]
+	},
+	{
+		"name": "REMOVE_CURSE_OTHER",
+		"deckQty": [10, 5, 2],
+		"cost": 2,
+		"func": "(s, o) -> o.curses--",
+		"colour": "CE0",
+		"faces": [
+			[
+				{
+					"type": "PATH",
+					"path": [1,1,9,9],
+					"size":1,
+					"colour":"000"
+				},
+				{
+					"type": "PATH",
+					"path": [1,9,9,1],
+					"size":1,
+					"colour":"000"
+				}
+			],
+			[
+				{
+					"type": "PATH",
+					"path": [1,1,9,9],
+					"size":1,
+					"colour":"000"
+				},
+				{
+					"type": "PATH",
+					"path": [1,9,9,1],
+					"size":1,
+					"colour":"000"
+				}
+			],
+			[
+				{
+					"type": "PATH",
+					"path": [1,1,9,9],
+					"size":1,
+					"colour":"000"
+				},
+				{
+					"type": "PATH",
+					"path": [1,9,9,1],
+					"size":1,
+					"colour":"000"
+				}
+			]
+		]
+	},
+	{
+		"name": "REMOVE_CURSE_SELF",
+		"deckQty": [20, 10, 5],
+		"cost": 3,
+		"func": "(s, o) -> s.curses--",
+		"colour": "87E",
+		"faces": [
+			[
+				{
+					"type": "PATH",
+					"path": [1,1,9,9],
+					"size":1,
+					"colour":"000"
+				},
+				{
+					"type": "PATH",
+					"path": [1,9,9,1],
+					"size":1,
+					"colour":"000"
+				}
+			],
+			[
+				{
+					"type": "PATH",
+					"path": [1,1,9,9],
+					"size":1,
+					"colour":"000"
+				},
+				{
+					"type": "PATH",
+					"path": [1,9,9,1],
+					"size":1,
+					"colour":"000"
+				}
+			],
+			[
+				{
+					"type": "PATH",
+					"path": [1,1,9,9],
+					"size":1,
+					"colour":"000"
+				},
+				{
+					"type": "PATH",
+					"path": [1,9,9,1],
+					"size":1,
+					"colour":"000"
+				}
+			]
+		]
+	},
+	{
+		"name": "TAKE_CURSE",
+		"deckQty": [15, 7, 3],
+		"cost": 2,
+		"func": "(s, o) -> {o.curses--; s.curses++;}",
+		"colour": "E44",
+		"faces": [
+			[
+				{
+					"type": "PATH",
+					"path": [1,1,9,9],
+					"size":1,
+					"colour":"000"
+				},
+				{
+					"type": "PATH",
+					"path": [1,9,9,1],
+					"size":1,
+					"colour":"000"
+				}
+			],
+			[
+				{
+					"type": "PATH",
+					"path": [1,1,9,9],
+					"size":1,
+					"colour":"000"
+				},
+				{
+					"type": "PATH",
+					"path": [1,9,9,1],
+					"size":1,
+					"colour":"000"
+				}
+			],
+			[
+				{
+					"type": "PATH",
+					"path": [1,1,9,9],
+					"size":1,
+					"colour":"000"
+				},
+				{
+					"type": "PATH",
+					"path": [1,9,9,1],
+					"size":1,
+					"colour":"000"
+				}
+			]
+		]
+	},
+	{
+		"name": "GIVE_CURSE",
+		"deckQty": [20, 10, 5],
+		"cost": 4,
+		"func": "(s, o) -> {o.curses++; s.curses--;}",
+		"colour": "8C4",
+		"faces": [
+			[
+				{
+					"type": "PATH",
+					"path": [1,1,9,9],
+					"size":1,
+					"colour":"000"
+				},
+				{
+					"type": "PATH",
+					"path": [1,9,9,1],
+					"size":1,
+					"colour":"000"
+				}
+			],
+			[
+				{
+					"type": "PATH",
+					"path": [1,1,9,9],
+					"size":1,
+					"colour":"000"
+				},
+				{
+					"type": "PATH",
+					"path": [1,9,9,1],
+					"size":1,
+					"colour":"000"
+				}
+			],
+			[
+				{
+					"type": "PATH",
+					"path": [1,1,9,9],
+					"size":1,
+					"colour":"000"
+				},
+				{
+					"type": "PATH",
+					"path": [1,9,9,1],
+					"size":1,
+					"colour":"000"
+				}
+			]
+		]
+	},
+	{
+		"name": "GAIN_POINT",
+		"deckQty": [20, 10, 5],
+		"cost": 2,
+		"func": "(s, o) -> s.points += 4",
+		"colour": "FC0",
+		"faces": [
+			[
+				{
+					"type": "PATH",
+					"path": [1,1,9,9],
+					"size":1,
+					"colour":"000"
+				},
+				{
+					"type": "PATH",
+					"path": [1,9,9,1],
+					"size":1,
+					"colour":"000"
+				}
+			],
+			[
+				{
+					"type": "PATH",
+					"path": [1,1,9,9],
+					"size":1,
+					"colour":"000"
+				},
+				{
+					"type": "PATH",
+					"path": [1,9,9,1],
+					"size":1,
+					"colour":"000"
+				}
+			],
+			[
+				{
+					"type": "PATH",
+					"path": [1,1,9,9],
+					"size":1,
+					"colour":"000"
+				},
+				{
+					"type": "PATH",
+					"path": [1,9,9,1],
+					"size":1,
+					"colour":"000"
+				}
+			]
+		]
+	},
+	{
+		"name": "REMOVE_POINT",
+		"deckQty": [20, 10, 5],
+		"cost": 3,
+		"func": "(s, o) -> o.points -= 8",
+		"colour": "04F",
+		"faces": [
+			[
+				{
+					"type": "PATH",
+					"path": [1,1,9,9],
+					"size":1,
+					"colour":"000"
+				},
+				{
+					"type": "PATH",
+					"path": [1,9,9,1],
+					"size":1,
+					"colour":"000"
+				}
+			],
+			[
+				{
+					"type": "PATH",
+					"path": [1,1,9,9],
+					"size":1,
+					"colour":"000"
+				},
+				{
+					"type": "PATH",
+					"path": [1,9,9,1],
+					"size":1,
+					"colour":"000"
+				}
+			],
+			[
+				{
+					"type": "PATH",
+					"path": [1,1,9,9],
+					"size":1,
+					"colour":"000"
+				},
+				{
+					"type": "PATH",
+					"path": [1,9,9,1],
+					"size":1,
+					"colour":"000"
+				}
+			]
+		]
+	},
+	{
+		"name": "SEAL_OWN_CURSE",
+		"deckQty": [0, 0, 0],
+		"cost": 2,
+		"func": "(s, o) -> {}",
+		"colour": "888",
+		"faces": [
+			[
+				{
+					"type": "PATH",
+					"path": [1,1,9,9],
+					"size":1,
+					"colour":"000"
+				},
+				{
+					"type": "PATH",
+					"path": [1,9,9,1],
+					"size":1,
+					"colour":"000"
+				}
+			],
+			[
+				{
+					"type": "PATH",
+					"path": [1,1,9,9],
+					"size":1,
+					"colour":"000"
+				},
+				{
+					"type": "PATH",
+					"path": [1,9,9,1],
+					"size":1,
+					"colour":"000"
+				}
+			],
+			[
+				{
+					"type": "PATH",
+					"path": [1,1,9,9],
+					"size":1,
+					"colour":"000"
+				},
+				{
+					"type": "PATH",
+					"path": [1,9,9,1],
+					"size":1,
+					"colour":"000"
+				}
+			]
+		]
+	},
+	{
+		"name": "SEAL_OTHER_CURSE",
+		"deckQty": [0, 0, 0],
+		"cost": 3,
+		"func": "(s, o) -> {}",
+		"colour": "888",
+		"faces": [
+			[
+				{
+					"type": "PATH",
+					"path": [1,1,9,9],
+					"size":1,
+					"colour":"000"
+				},
+				{
+					"type": "PATH",
+					"path": [1,9,9,1],
+					"size":1,
+					"colour":"000"
+				}
+			],
+			[
+				{
+					"type": "PATH",
+					"path": [1,1,9,9],
+					"size":1,
+					"colour":"000"
+				},
+				{
+					"type": "PATH",
+					"path": [1,9,9,1],
+					"size":1,
+					"colour":"000"
+				}
+			],
+			[
+				{
+					"type": "PATH",
+					"path": [1,1,9,9],
+					"size":1,
+					"colour":"000"
+				},
+				{
+					"type": "PATH",
+					"path": [1,9,9,1],
+					"size":1,
+					"colour":"000"
+				}
+			]
+		]
+	},
+	{
+		"name": "PROTECT_SELF",
+		"deckQty": [0, 0, 0],
+		"cost": 4,
+		"func": "(s, o) -> {}",
+		"colour": "888",
+		"faces": [
+			[
+				{
+					"type": "PATH",
+					"path": [1,1,9,9],
+					"size":1,
+					"colour":"000"
+				},
+				{
+					"type": "PATH",
+					"path": [1,9,9,1],
+					"size":1,
+					"colour":"000"
+				}
+			],
+			[
+				{
+					"type": "PATH",
+					"path": [1,1,9,9],
+					"size":1,
+					"colour":"000"
+				},
+				{
+					"type": "PATH",
+					"path": [1,9,9,1],
+					"size":1,
+					"colour":"000"
+				}
+			],
+			[
+				{
+					"type": "PATH",
+					"path": [1,1,9,9],
+					"size":1,
+					"colour":"000"
+				},
+				{
+					"type": "PATH",
+					"path": [1,9,9,1],
+					"size":1,
+					"colour":"000"
+				}
+			]
+		]
+	},
+	{
+		"name": "PROTECT_OTHER",
+		"deckQty": [0, 0, 0],
+		"cost": 2,
+		"func": "(s, o) -> {}",
+		"colour": "888",
+		"faces": [
+			[
+				{
+					"type": "PATH",
+					"path": [1,1,9,9],
+					"size":1,
+					"colour":"000"
+				},
+				{
+					"type": "PATH",
+					"path": [1,9,9,1],
+					"size":1,
+					"colour":"000"
+				}
+			],
+			[
+				{
+					"type": "PATH",
+					"path": [1,1,9,9],
+					"size":1,
+					"colour":"000"
+				},
+				{
+					"type": "PATH",
+					"path": [1,9,9,1],
+					"size":1,
+					"colour":"000"
+				}
+			],
+			[
+				{
+					"type": "PATH",
+					"path": [1,1,9,9],
+					"size":1,
+					"colour":"000"
+				},
+				{
+					"type": "PATH",
+					"path": [1,9,9,1],
+					"size":1,
+					"colour":"000"
+				}
+			]
+		]
+	}
+]

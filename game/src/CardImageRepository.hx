@@ -1,5 +1,6 @@
 package;
 
+import js.html.Path2D;
 import game.CardEffectLibrary;
 import game.CardEffect;
 import js.lib.Promise;
@@ -16,6 +17,13 @@ class CardImageRepository {
 	private static inline var WIDTH:Int = 3 * CardSprite.WIDTH;
 	private static inline var HEIGHT:Int = 3 * CardSprite.HEIGHT;
 	private static inline var COST_SIZE:Int = Math.floor(WIDTH * 0.3);
+
+	private static inline var FACE_WIDTH:Float = WIDTH - 80;
+	private static inline var FACE_HEIGHT:Float = FACE_WIDTH;
+	private static inline var FACE_X:Float = 40;
+	private static inline var FACE_Y:Float = 570 - FACE_HEIGHT;
+	private static inline var FACE_XY_DIFF:Float = FACE_Y - FACE_X;
+
 
 	private static var repo = new Map<String, ImageBitmap>();
 
@@ -53,8 +61,12 @@ class CardImageRepository {
 		d.fillStyle = "#fff";
 		d.roundRect(40, 40, WIDTH-80, HEIGHT-80, 15, true, false);
 
+		// image
+		renderFace(CardEffect.FACE[c.effects[0]][c.effects.length-1]);
+
 		// cost
 		d.lineWidth = 6;
+		d.strokeStyle = "#000";
 		d.fillStyle = "#fff";
 		d.roundRect(4, 4, COST_SIZE, COST_SIZE, 15, true);
 		d.font = "100px sans-serif";
@@ -63,14 +75,15 @@ class CardImageRepository {
 
 		// separator
 		d.lineWidth = 6;
-		d.fillStyle = "#999";
+		d.strokeStyle = "#999";
+		d.beginPath();
 		d.moveTo(40, 570);
 		d.lineTo(WIDTH - 40, 570);
 		d.stroke();
 
+		// description
 		d.font = "45px sans-serif";
 		d.fillStyle = "#000";
-
 		var yAcc = 570 + 80;
 		for(n in getDescription(c.effects[0], c.effects.length).split("_")){
 			d.centeredText(n, 0, WIDTH, yAcc, true);
@@ -90,24 +103,8 @@ class CardImageRepository {
 		});
 	}
 
-	private static function getColour(ce:Int) {
-		return switch(ce){
-			case CardEffect.ADD_CURSE_OTHER: "F70";
-			case CardEffect.REMOVE_CURSE_OTHER: "CE0";
-			case CardEffect.ADD_CURSE_SELF: "E48";
-			case CardEffect.REMOVE_CURSE_SELF: "87E";
-			case CardEffect.TAKE_CURSE: "E44";
-			case CardEffect.GIVE_CURSE: "8C4";
-			case CardEffect.GAIN_POINT: "FC0";
-			case CardEffect.REMOVE_POINT: "04F";
-			/*
-			case CardEffect.SEAL_OWN_CURSE: "888";
-			case CardEffect.SEAL_OTHER_CURSE: "888";
-			case CardEffect.PROTECT_SELF: "888";
-			case CardEffect.PROTECT_OTHER: "888";
-			*/
-			default: "888";
-		}
+	private static inline function getColour(ce:Int) {
+		return CardEffect.COLOUR[ce];
 	}
 
 	private static function getDescription(ce:Int, qty:Int) {
@@ -121,12 +118,6 @@ class CardImageRepository {
 			case CardEffect.GIVE_CURSE: 'Give ${qty} of your_Curses to your_opponent'; //Give x of your Curses to your opponent
 			case CardEffect.GAIN_POINT: 'Gain ${qty * CardEffectLibrary.POINTS_EFFECT_QTY} Points'; //Gain x Points
 			case CardEffect.REMOVE_POINT: 'Remove ${qty * CardEffectLibrary.POINTS_EFFECT_REMOVE_QTY} Points_from your opponent'; //Remove x Points from your opponent
-			/*
-			case CardEffect.SEAL_OWN_CURSE: "";
-			case CardEffect.SEAL_OTHER_CURSE: "";
-			case CardEffect.PROTECT_SELF: "";
-			case CardEffect.PROTECT_OTHER: "";
-			*/
 			default: "";
 		}
 	}
@@ -169,5 +160,63 @@ class CardImageRepository {
 			repo.set("", i);
 			return i;
 		});
+	}
+
+	private static function renderFace(s:String) {
+		if(s == null){
+			return;
+		}
+		for(i in s.split("|")){
+			switch(i.charAt(0)){
+				case "s": renderStringFace(i.substr(1));
+				case "p": renderPathFace(i.substr(1));
+			}
+		}
+	}
+
+	private static function renderStringFace(s:String){
+		//${item.colour}${item.size}${item.x}${item.y}${item.value}
+		var c = s.substr(0, 3);
+		var z = faceSize(Std.parseInt(s.substr(3,1)));
+		var x = facePosX(Std.parseInt(s.substr(4,1)));
+		var y = facePosY(Std.parseInt(s.substr(5,1)));
+		var v = s.substr(6);
+
+		d.font = '${z}px sans-serif';
+		d.fillStyle = '#$c';
+		var w = d.measureText(v).width;
+
+		d.strokeText(v, x-w/2, y+z/2);
+
+		//trace('Render string face item "$v" at $x x $y, size: $z, colour: $c');
+	}
+
+	private static function renderPathFace(s:String){
+		//${item.colour}${item.size}${item.path.join()}
+		var c = s.substr(0, 3);
+		var z = faceSize(Std.parseInt(s.substr(3,1))) / 2;
+		var p = s.substr(4).split("").map(Std.parseInt).map(facePosX);
+		
+		//trace('Render path face item "$p" size: $z, colour: $c');
+
+		d.lineWidth = z;
+		d.strokeStyle = '#$c';
+
+		d.beginPath();
+		d.moveTo(p.shift(), p.shift() + FACE_XY_DIFF);
+		for(n in 0...Math.floor(p.length / 2)){
+			d.lineTo(p.shift(), p.shift() + FACE_XY_DIFF);
+		}
+		d.stroke();
+	}
+
+	private static inline function facePosX(x:Int){
+		return FACE_X + FACE_WIDTH * (x/10);
+	}
+	private static inline function facePosY(y:Int){
+		return FACE_Y + FACE_HEIGHT * (y/10);
+	}
+	private static inline function faceSize(s:Int){
+		return FACE_HEIGHT * (s / 10);
 	}
 }

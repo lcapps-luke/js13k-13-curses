@@ -21,12 +21,9 @@ class MainMenuScreen extends AbstractScreen{
 		playButton.onClick = () -> Main.currentScreen = new GameScreen();
 
 		if(!loaded){
-			for(d in CardEffectLibrary.getDeck().keyValueIterator()){
-				for(i in 0...d.value.length){
-					if(d.value[i] == 0){
-						continue;
-					}
-					cardLoadQueue.push(new Card([for (q in 0...(i + 1)) d.key ]));
+			for(d in 0...CardEffectLibrary.getDeck().length){
+				for(i in 0...CardEffectLibrary.getDeck()[d].length){
+					cardLoadQueue.push(new Card([for (q in 0...(i + 1)) d ]));
 				}
 			}
 

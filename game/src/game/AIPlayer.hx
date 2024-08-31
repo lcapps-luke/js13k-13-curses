@@ -70,7 +70,7 @@ class AIPlayer{
 		return switch(card.effects[0]){
 			case CardEffect.ADD_CURSE_OTHER: true;
 			case CardEffect.GIVE_CURSE: true;
-			case CardEffect.SEAL_OTHER_CURSE: true;
+			//case CardEffect.SEAL_OTHER_CURSE: true;
 			case CardEffect.GAIN_POINT: true;
 			case CardEffect.REMOVE_POINT: true;
 			default: false;

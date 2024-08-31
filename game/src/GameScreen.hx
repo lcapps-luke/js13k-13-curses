@@ -626,6 +626,7 @@ class GameScreen extends AbstractScreen{
 				return new PlaceholderEffect(playerIndex, board, efunc);
 			case CardEffect.REMOVE_POINT:
 				return new PlaceholderEffect(playerIndex, board, efunc);
+				/*
 			case CardEffect.SEAL_OWN_CURSE:
 				return new PlaceholderEffect(playerIndex, board, efunc);
 			case CardEffect.SEAL_OTHER_CURSE:
@@ -634,6 +635,7 @@ class GameScreen extends AbstractScreen{
 				return new PlaceholderEffect(playerIndex, board, efunc);
 			case CardEffect.PROTECT_OTHER:
 				return new PlaceholderEffect(playerIndex, board, efunc);
+				*/
 			default: null;
 		};
 	}
