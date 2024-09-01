@@ -1,7 +1,5 @@
 package;
 
-import ui.Tween;
-import js.html.svg.Point;
 import ui.Pointer;
 import js.Browser;
 import js.html.CanvasRenderingContext2D;
@@ -24,6 +22,9 @@ class Main{
 	@:native("l")
 	public static var lastFrame:Float = 0;
 
+	@:native("tm")
+	public static var timerManager(default, null) = new EphemeralObjectManager();
+
 	public static function main(){
 		canvas = cast Browser.document.getElementById("c");
 		context = canvas.getContext2d();
@@ -40,7 +41,7 @@ class Main{
 	private static function update(s:Float){
 		var d = s - lastFrame;
 
-		TimerManager.update(d / 1000);
+		timerManager.update(d / 1000);
 		currentScreen?.update(d / 1000);
 
 		lastFrame = s;

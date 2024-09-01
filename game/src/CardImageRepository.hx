@@ -1,6 +1,5 @@
 package;
 
-import js.html.Path2D;
 import game.CardEffectLibrary;
 import game.CardEffect;
 import js.lib.Promise;

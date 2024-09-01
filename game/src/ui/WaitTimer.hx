@@ -1,15 +1,14 @@
 package ui;
 
 import js.lib.Promise;
-import TimerManager.Timer;
 
-class WaitTimer extends Timer{
+class WaitTimer extends AbstractEphemeralObject{
 	private var s:Float;
 	private var c:WaitTimer->Void;
 
 	public static function sec(s:Float){
 		return new Promise((res, ref) -> {
-			TimerManager.add(new WaitTimer(s, res));
+			Main.timerManager.add(new WaitTimer(s, res));
 		});
 	}
 

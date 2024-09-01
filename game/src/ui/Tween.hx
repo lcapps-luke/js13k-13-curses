@@ -1,9 +1,8 @@
 package ui;
 
-import TimerManager.Timer;
 import js.lib.Promise;
 
-class Tween extends Timer{
+class Tween extends AbstractEphemeralObject{
 	private var p:Float = 0;
 	private var sc:Float;
 	private var props:Array<TweenProperty>;
@@ -17,16 +16,22 @@ class Tween extends Timer{
 			var s = Reflect.getProperty(obj, f);
 			var e = Reflect.getProperty(val, f);
 
-			props.push({
-				tgt: obj,
-				name: f,
-				start: s,
-				scale: e - s
-			});
+			if(s != e){
+				props.push({
+					tgt: obj,
+					name: f,
+					start: s,
+					scale: e - s
+				});
+			}
 		}
 
 		return new Promise((res, rej) -> {
-			TimerManager.add(new Tween(sc, props, res));
+			if(props.length > 0){
+				Main.timerManager.add(new Tween(sc, props, res));
+			}else{
+				res(null);
+			}
 		});
 	}
 

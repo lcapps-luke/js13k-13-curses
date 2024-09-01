@@ -1,6 +1,6 @@
 package ui;
 
-abstract class Sprite{
+abstract class Sprite extends AbstractEphemeralObject{
 	public var x:Float;
 	public var y:Float;
 	public var w:Float;
@@ -15,6 +15,4 @@ abstract class Sprite{
 		this.w = w;
 		this.h = h;
 	}
-
-	public abstract function update(s:Float):Void;
 }

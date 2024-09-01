@@ -36,4 +36,8 @@ class ContextUtils {
 			ctx.strokeText(txt, x + w / 2 - tw / 2, y);
 		}
 	}
+
+	public static function circle(ctx:CanvasRenderingContext2D, x:Float, y:Float, r:Float, yr:Null<Float> = null){
+		Main.context.ellipse(x, y, r, yr == null ? r : yr, 0, 0, Math.PI * 2);
+	}
 }

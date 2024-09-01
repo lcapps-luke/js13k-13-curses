@@ -1,12 +1,13 @@
 package;
 
+import ui.effect.RemoveCurseEffect;
 import game.Player;
 import ui.TextSprite;
 import ui.Sprite;
 import game.AIPlayer;
 import game.CardEffectLibrary;
 import ui.effect.PlaceholderEffect;
-import ui.effect.CurseEffect;
+import ui.effect.AddCurseEffect;
 import game.CardEffect;
 import ui.effect.CardEffectSprite;
 import ui.HandCardButton;
@@ -39,10 +40,9 @@ class GameScreen extends AbstractScreen{
 	private static inline var PLAYER_HAND_Y:Float = 1520;
 	private static inline var SHOP_SLOT_WIDTH:Float = CardSprite.WIDTH + 25;
 	private static inline var SHOP_START_X:Float = Main.WIDTH / 2 - (SHOP_SLOT_WIDTH * Board.SHOP_SIZE) / 2;
-	private static inline var CURSE_SLOT_SIZE:Float = Main.WIDTH / 16;
-	private static inline var CURSE_SLOT_MARGIN:Float = 3;
-	private static inline var CURSE_SLOT_RADIUS:Float = (CURSE_SLOT_SIZE - CURSE_SLOT_MARGIN * 2) / 2;
-	
+	public static inline var CURSE_SLOT_SIZE:Float = Main.WIDTH / 16;
+	public static inline var CURSE_SLOT_MARGIN:Float = 3;
+	public static inline var CURSE_SLOT_RADIUS:Float = (CURSE_SLOT_SIZE - CURSE_SLOT_MARGIN * 2) / 2;
 
 	private var board = new Board();
 
@@ -72,7 +72,7 @@ class GameScreen extends AbstractScreen{
 	private var backButton:Button;
 	private var buyButton:Button;
 
-	private var currentEffect:CardEffectSprite = null;
+	private var effectManager = new EphemeralObjectManager();
 
 	private var gameOverSprites= new Array<Sprite>();
 	private var endGameButton:Button;
@@ -211,7 +211,7 @@ class GameScreen extends AbstractScreen{
 		phaseFunc(s);
 
 		focusCard?.update(s);
-		currentEffect?.update(s);
+		effectManager.update(s);
 
 		for(gos in gameOverSprites){
 			gos.update(s);
@@ -577,17 +577,17 @@ class GameScreen extends AbstractScreen{
 	private function playCard(playerIndex:Int, spr:CardSprite):Promise<Dynamic>{
 		// get change from card
 		var lastEffect = Promise.resolve();
+		var eQty = 0;
 		for(i in spr.card.effects){
-			var eff = createCardEffect(i, playerIndex);
+			var eff = createCardEffect(i, playerIndex, eQty);
+			eQty++;
 			lastEffect = lastEffect.then(r -> {
-				currentEffect = eff;
+				effectManager.add(eff);
 				return eff.play();
 			});
 		}
 		
 		return lastEffect.then(e -> {
-			currentEffect = null;
-
 			var ownHand = playerIndex == AI_PLAYER_INDEX ? aiHand : playerHand;
 			ownHand.remove(spr);
 			board.players[playerIndex].cards.remove(spr.card);
@@ -607,17 +607,19 @@ class GameScreen extends AbstractScreen{
 		});
 	}
 	
-	function createCardEffect(eff:Int, playerIndex:Int):CardEffectSprite {
+	function createCardEffect(eff:Int, playerIndex:Int, increment:Int):CardEffectSprite {
 		var efunc = CardEffectLibrary.getEffectFunction(eff);
 		return switch(eff){
 			case CardEffect.ADD_CURSE_OTHER:
-				return new CurseEffect(playerIndex, board, efunc);
+				return new AddCurseEffect(playerIndex, board, efunc, false, increment);
 			case CardEffect.ADD_CURSE_SELF:
-				return new CurseEffect(playerIndex, board, efunc);
+				return new AddCurseEffect(playerIndex, board, efunc, true, increment);
 			case CardEffect.REMOVE_CURSE_OTHER:
-				return new PlaceholderEffect(playerIndex, board, efunc);
+				return return new RemoveCurseEffect(playerIndex, board, efunc, false, increment);
+				//new PlaceholderEffect(playerIndex, board, efunc);
 			case CardEffect.REMOVE_CURSE_SELF:
-				return new PlaceholderEffect(playerIndex, board, efunc);
+				return new RemoveCurseEffect(playerIndex, board, efunc, true, increment);
+				//new PlaceholderEffect(playerIndex, board, efunc);
 			case CardEffect.TAKE_CURSE:
 				return new PlaceholderEffect(playerIndex, board, efunc);
 			case CardEffect.GIVE_CURSE:
