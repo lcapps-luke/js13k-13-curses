@@ -7,7 +7,6 @@ import js.lib.Promise;
 using ui.ContextUtils;
 
 class MoveCurseEffect extends CardEffectSprite{
-	private var self:Bool = false;
 	private var sx:Float;
 	private var sy:Float;
 	private var tx:Float;
@@ -15,7 +14,6 @@ class MoveCurseEffect extends CardEffectSprite{
 
 	public function new(playerIndex:Int, board:Board, effectFunction:Player->Player->Void, self:Bool, i:Int){
 		super(playerIndex, board, effectFunction);
-		this.self = self;
 
 		var targetPlayerIndex = self ? playerIndex : (playerIndex == 0 ? 1 : 0);
 		var sourcePlayerIndex = targetPlayerIndex == 0 ? 1 : 0;

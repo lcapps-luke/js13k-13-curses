@@ -165,7 +165,7 @@
 		"name": "REMOVE_CURSE_OTHER",
 		"deckQty": [10, 5, 2],
 		"cost": 2,
-		"func": "(s, o) -> o.curses--",
+		"func": "(s, o) -> {o.curses = Std.int(Math.max(0, o.curses - 1));}",
 		"colour": "CE0",
 		"faces": [
 			[
@@ -282,7 +282,7 @@
 		"name": "REMOVE_CURSE_SELF",
 		"deckQty": [20, 10, 5],
 		"cost": 3,
-		"func": "(s, o) -> s.curses--",
+		"func": "(s, o) -> {s.curses = Std.int(Math.max(0, s.curses - 1));}",
 		"colour": "87E",
 		"faces": [
 			[
@@ -660,7 +660,7 @@
 		"name": "REMOVE_POINT",
 		"deckQty": [20, 10, 5],
 		"cost": 3,
-		"func": "(s, o) -> o.points -= 8",
+		"func": "(s, o) -> {o.points = Std.int(Math.max(0, o.points - 8));}",
 		"colour": "04F",
 		"faces": [
 			[

@@ -7,7 +7,6 @@ import js.lib.Promise;
 using ui.ContextUtils;
 
 class RemoveCurseEffect extends CardEffectSprite{
-	private var self:Bool = false;
 	private var tx:Float;
 	private var ty:Float;
 
@@ -16,7 +15,6 @@ class RemoveCurseEffect extends CardEffectSprite{
 
 	public function new(playerIndex:Int, board:Board, effectFunction:Player->Player->Void, self:Bool, i:Int){
 		super(playerIndex, board, effectFunction);
-		this.self = self;
 
 		var targetPlayerIndex = self ? playerIndex : (playerIndex == 0 ? 1 : 0);
 
@@ -24,6 +22,8 @@ class RemoveCurseEffect extends CardEffectSprite{
 
 		ty = (targetPlayerIndex == 0) ? (Main.HEIGHT - GameScreen.CURSE_SLOT_RADIUS - 13) : (GameScreen.CURSE_SLOT_RADIUS + 13);
 		tx = GameScreen.CURSE_SLOT_SIZE * slot + GameScreen.CURSE_SLOT_MARGIN + GameScreen.CURSE_SLOT_RADIUS;
+
+		done = slot < 0;
 	}
 
 	public function update(s:Float) {
@@ -43,6 +43,10 @@ class RemoveCurseEffect extends CardEffectSprite{
 	}
 	
 	public function play():Promise<CardEffectSprite> {
+		if(done){
+			return cast Promise.resolve(this);
+		}
+
 		return Tween.start(this, {
 			x: tx,
 			y: ty

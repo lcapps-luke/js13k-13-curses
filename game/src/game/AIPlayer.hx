@@ -97,13 +97,13 @@ class AIPlayer{
 		if(self.curses < 13){
 			score += 13 - self.curses;
 		}else{
-			score += (self.curses - 13) * 3;
+			score += (self.curses - 13) * 6;
 		}
 
 		if(other.curses < 13){
 			score += other.curses;
 		}else{
-			score -= (other.curses - 13) * 3;
+			score -= (other.curses - 13) * 6;
 		}
 
 		return score;

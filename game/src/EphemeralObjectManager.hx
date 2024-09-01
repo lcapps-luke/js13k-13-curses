@@ -24,5 +24,9 @@ class EphemeralObjectManager{
 	public function hasAlive(){
 		return alive.length > 0;
 	}
+
+	public function count(){
+		return alive.length;
+	}
 }
 

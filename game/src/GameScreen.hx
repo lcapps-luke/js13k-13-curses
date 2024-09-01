@@ -1,5 +1,6 @@
 package;
 
+import ui.effect.AddPointsEffect;
 import ui.effect.MoveCurseEffect;
 import ui.effect.RemoveCurseEffect;
 import game.Player;
@@ -39,8 +40,9 @@ class GameScreen extends AbstractScreen{
 	private static inline var END_WAIT = 1;
 
 	private static inline var PLAYER_HAND_Y:Float = 1520;
-	private static inline var SHOP_SLOT_WIDTH:Float = CardSprite.WIDTH + 25;
-	private static inline var SHOP_START_X:Float = Main.WIDTH / 2 - (SHOP_SLOT_WIDTH * Board.SHOP_SIZE) / 2;
+
+	public static inline var SHOP_SLOT_WIDTH:Float = CardSprite.WIDTH + 25;
+	public static inline var SHOP_START_X:Float = Main.WIDTH / 2 - (SHOP_SLOT_WIDTH * Board.SHOP_SIZE) / 2;
 	public static inline var CURSE_SLOT_SIZE:Float = Main.WIDTH / 16;
 	public static inline var CURSE_SLOT_MARGIN:Float = 3;
 	public static inline var CURSE_SLOT_RADIUS:Float = (CURSE_SLOT_SIZE - CURSE_SLOT_MARGIN * 2) / 2;
@@ -132,23 +134,21 @@ class GameScreen extends AbstractScreen{
 		Main.context.stroke();
 
 		Main.context.lineWidth = 4;
-		var shopSlotWidth = CardSprite.WIDTH + 25;
-		var startX = Main.WIDTH / 2 - (shopSlotWidth * Board.SHOP_SIZE) / 2;
 		for(i in 0...3){
-			Main.context.roundRect(startX + shopSlotWidth * i, Main.HEIGHT / 2 - CardSprite.HEIGHT / 2, CardSprite.WIDTH, CardSprite.HEIGHT, 5, true, true);
+			Main.context.roundRect(SHOP_START_X + SHOP_SLOT_WIDTH * i, Main.HEIGHT / 2 - CardSprite.HEIGHT / 2, CardSprite.WIDTH, CardSprite.HEIGHT, 5, true, true);
 		}
 
 		//render round number
 		Main.context.fillStyle="#000";
 		Main.context.font = "40px sans-serif";
-		Main.context.centeredText('Round $round', 0, startX, Main.HEIGHT / 2 - 60);
+		Main.context.centeredText('Round $round', 0, SHOP_START_X, Main.HEIGHT / 2 - 60);
 
 		//render points
 		Main.context.font = "100px sans-serif";
-		Main.context.centeredText(Std.string(board.players[0].points), 0, startX, Main.HEIGHT / 2 + 100);
+		Main.context.centeredText(Std.string(board.players[0].points), 0, SHOP_START_X, Main.HEIGHT / 2 + 100);
 
 		Main.context.font = "100px sans-serif";
-		Main.context.centeredText(Std.string(board.players[1].points), startX + shopSlotWidth * 3 - 12.5, startX, Main.HEIGHT / 2 - 30);
+		Main.context.centeredText(Std.string(board.players[1].points), SHOP_START_X + SHOP_SLOT_WIDTH * 3 - 12.5, SHOP_START_X, Main.HEIGHT / 2 - 30);
 
 		//render shop
 		for(c in shop){
@@ -624,7 +624,7 @@ class GameScreen extends AbstractScreen{
 			case CardEffect.GIVE_CURSE:
 				return new MoveCurseEffect(playerIndex, board, efunc, false, increment);
 			case CardEffect.GAIN_POINT:
-				return new PlaceholderEffect(playerIndex, board, efunc);
+				return new AddPointsEffect(playerIndex, board, efunc);
 			case CardEffect.REMOVE_POINT:
 				return new PlaceholderEffect(playerIndex, board, efunc);
 				/*

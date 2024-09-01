@@ -67,7 +67,7 @@ class CardEffectBuilder {
 			pos: Context.currentPos()
 		};
 		fields.push(deckField);
-
+		
 		var qtyField = {
 			name: "CARD_QTY",
 			doc: null,
@@ -88,9 +88,9 @@ class CardEffectBuilder {
 		};
 		fields.push(colourField);
 
-
 		var code = '[${functions.join(",")}]';
-		var funcExpr = Context.parse(code, Context.currentPos());
+		trace(code);
+		var funcExpr = Context.parseInlineString(code, Context.currentPos());
 
 		var funcField = {
 			name: "FUNC",

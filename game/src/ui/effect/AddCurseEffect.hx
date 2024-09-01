@@ -7,13 +7,11 @@ import js.lib.Promise;
 using ui.ContextUtils;
 
 class AddCurseEffect extends CardEffectSprite{
-	private var self:Bool = false;
 	private var tx:Float;
 	private var ty:Float;
 
 	public function new(playerIndex:Int, board:Board, effectFunction:Player->Player->Void, self:Bool, i:Int){
 		super(playerIndex, board, effectFunction);
-		this.self = self;
 
 		var targetPlayerIndex = self ? playerIndex : (playerIndex == 0 ? 1 : 0);
 
