@@ -1,5 +1,6 @@
 package;
 
+import ui.effect.MoveCurseEffect;
 import ui.effect.RemoveCurseEffect;
 import game.Player;
 import ui.TextSprite;
@@ -615,15 +616,13 @@ class GameScreen extends AbstractScreen{
 			case CardEffect.ADD_CURSE_SELF:
 				return new AddCurseEffect(playerIndex, board, efunc, true, increment);
 			case CardEffect.REMOVE_CURSE_OTHER:
-				return return new RemoveCurseEffect(playerIndex, board, efunc, false, increment);
-				//new PlaceholderEffect(playerIndex, board, efunc);
+				return new RemoveCurseEffect(playerIndex, board, efunc, false, increment);
 			case CardEffect.REMOVE_CURSE_SELF:
 				return new RemoveCurseEffect(playerIndex, board, efunc, true, increment);
-				//new PlaceholderEffect(playerIndex, board, efunc);
 			case CardEffect.TAKE_CURSE:
-				return new PlaceholderEffect(playerIndex, board, efunc);
+				return new MoveCurseEffect(playerIndex, board, efunc, true, increment);
 			case CardEffect.GIVE_CURSE:
-				return new PlaceholderEffect(playerIndex, board, efunc);
+				return new MoveCurseEffect(playerIndex, board, efunc, false, increment);
 			case CardEffect.GAIN_POINT:
 				return new PlaceholderEffect(playerIndex, board, efunc);
 			case CardEffect.REMOVE_POINT:
