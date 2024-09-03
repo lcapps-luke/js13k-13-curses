@@ -16,6 +16,8 @@ class Region{
 	public var onClick:Void->Void;
 	public var enabled:Bool = true;
 
+	private var clickSound = Sound.button;
+
 	public function new(x:Float, y:Float, w:Float, h:Float){
 		this.x = x;
 		this.y = y;
@@ -30,10 +32,13 @@ class Region{
 		if(enabled && !(Pointer.X < x || Pointer.Y < y || Pointer.X > x + w || Pointer.Y > y + h)){
 			state = Pointer.DOWN ? STATE_DOWN : STATE_OVER;
 			clicked = Pointer.CLICK;
-			
-			if(clicked && onClick != null){
-				onClick();
+			if(clicked){
+				clickSound();
+				if(onClick != null){
+					onClick();
+				}
 			}
+			
 		}
 	}
 }

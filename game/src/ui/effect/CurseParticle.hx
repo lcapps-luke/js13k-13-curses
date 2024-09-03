@@ -24,7 +24,7 @@ class CurseParticle extends Sprite{
 		this.y += ys * s;
 
 		Main.context.fillStyle = "#f0f";
-		Main.context.globalAlpha = a;
+		Main.context.globalAlpha = Math.max(0, a);
 		Main.context.beginPath();
 		Main.context.circle(x, y, w / 2);
 		Main.context.fill();

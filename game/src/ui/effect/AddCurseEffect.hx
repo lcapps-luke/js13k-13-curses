@@ -33,6 +33,7 @@ class AddCurseEffect extends CardEffectSprite{
 			x: tx,
 			y: ty
 		}, 0.5).then(t->{
+			Sound.curse();
 			applyEffect();
 			alive = false;
 			return cast this;

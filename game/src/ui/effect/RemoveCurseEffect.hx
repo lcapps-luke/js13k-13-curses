@@ -29,7 +29,7 @@ class RemoveCurseEffect extends CardEffectSprite{
 	public function update(s:Float) {
 		Main.context.lineWidth = 3;
 		Main.context.strokeStyle = "#FF0";
-		Main.context.globalAlpha = a;
+		Main.context.globalAlpha = Math.max(0, a);
 		Main.context.beginPath();
 		Main.context.moveTo(Main.WIDTH / 2, Main.HEIGHT / 2);
 		Main.context.lineTo(x, y);
@@ -52,6 +52,7 @@ class RemoveCurseEffect extends CardEffectSprite{
 			y: ty
 		}, 0.2).then(t->{
 			applyEffect();
+			Sound.uncurse();
 			
 			for(i in 0...13){
 				var d = Math.random() * (Math.PI * 2);

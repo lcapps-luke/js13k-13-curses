@@ -51,6 +51,7 @@ class MoveCurseEffect extends CardEffectSprite{
 			y: ty
 		}, 0.5).then(t->{
 			applyEffect();
+			Sound.curse();
 			alive = false;
 			return cast this;
 		});

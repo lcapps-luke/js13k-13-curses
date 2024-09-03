@@ -6,6 +6,7 @@ class Coin extends Sprite{
 	private var f:Float = 0;
 	private var flipSpeed:Float = 0;
 	private var flipTime:Float = 0;
+	private var soundTimer:Float = 0;
 
 	private var c:Bool->Void = null;
 
@@ -17,8 +18,15 @@ class Coin extends Sprite{
 	public function update(s:Float) {
 		if(flipTime > 0){
 			flipTime -= s;
+			
 			f += flipSpeed * s;
 			scaleY = Math.cos(f);
+
+			soundTimer -= flipSpeed * s;
+			if(soundTimer <= 0){
+				soundTimer = Math.PI / 2;
+				Sound.coinFlip();
+			}
 		}else if(c != null){
 			scaleY = scaleY > 0 ? 1 : -1;
 			c(scaleY > 0);
@@ -35,6 +43,7 @@ class Coin extends Sprite{
 	public function flip():Promise<Bool>{
 		flipSpeed = (Math.random() * 2 * Math.PI) + (Math.PI * 5);
 		flipTime = Math.random() * 0.2 + 0.8;
+		soundTimer = Math.PI / 2;
 
 		return new Promise((res,rej)->{c = res;});
 	}

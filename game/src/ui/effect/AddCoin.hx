@@ -36,6 +36,7 @@ class AddCoin extends Sprite{
 		Main.context.fill();
 
 		if(Math.abs(x - tx) < 60 && Math.abs(y - ty) < 40){
+			Sound.gainCoin();
 			alive = false;
 		}
 	}

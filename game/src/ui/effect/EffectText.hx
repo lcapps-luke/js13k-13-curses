@@ -21,7 +21,7 @@ class EffectText extends Sprite{
 		y += Y_SPEED * s;
 		a -= A_SPEED * s;
 
-		Main.context.globalAlpha = a;
+		Main.context.globalAlpha = Math.max(0, a);
 		Main.context.font = fnt;
 		Main.context.fillStyle = sty;
 		Main.context.centeredText(str, x, 0, y);

@@ -31,6 +31,7 @@ class CardSprite extends Sprite{
 	}
 
 	public function flip():Promise<Tween>{
+		Sound.flip();
 		return Tween.start(this, {scaleX:0}, 0.2).then((t) -> {
 			faceDown = !faceDown;
 			return Tween.start(this, {scaleX:1}, 0.2);

@@ -243,9 +243,11 @@ class GameScreen extends AbstractScreen{
 			var ty = cardHandY(playerIndex);//playerIndex == AI_PLAYER_INDEX ? 120 : PLAYER_HAND_Y;
 
 			if(lastTween == null){
+				Sound.slide();
 				lastTween = Tween.start(spr, {x:tx, y:ty}, 0.3);
 			}else{
 				lastTween = lastTween.then((t) -> {
+					Sound.slide();
 					return Tween.start(spr, {x:tx, y:ty}, 0.3);
 				});
 			}
@@ -296,7 +298,7 @@ class GameScreen extends AbstractScreen{
 			}
 
 			lastTween = lastTween.then(t -> {
-				c.flip();
+				Sound.slide();
 				return Tween.start(c, {x: -c.w}, 0.5);
 			});
 		}
@@ -401,6 +403,7 @@ class GameScreen extends AbstractScreen{
 					lastPromise = lastPromise.then(n -> {
 						var shopCard = shop[a.index];
 						board.players[1].points -= shopCard.card.cost;
+						Sound.slide();
 						return Tween.start(shopCard, {
 							x: cardHandX(board.players[1].cards.length),
 							y: cardHandY(1)
@@ -422,6 +425,7 @@ class GameScreen extends AbstractScreen{
 					}).then(t -> {
 						return aiHand[selectedHandIndex].flip().then(t -> {
 							focusCard = aiHand[selectedHandIndex];
+							Sound.slide();
 							return Tween.start(aiHand[selectedHandIndex], {
 								scaleX: 3,
 								scaleY: 3,
@@ -471,6 +475,7 @@ class GameScreen extends AbstractScreen{
 					playButton.enabled = playerHand[selectedHandIndex].card.canPlay(board.players[0], board.players[1]);
 
 					focusCard = playerHand[selectedHandIndex];
+					Sound.slide();
 					Tween.start(playerHand[selectedHandIndex], {
 						scaleX: 3,
 						scaleY: 3,
@@ -494,6 +499,7 @@ class GameScreen extends AbstractScreen{
 					buyButton.enabled = (shop[selectedHandIndex].card.cost <= board.players[0].points && board.players[0].cards.length < 5);
 
 					focusCard = shop[selectedHandIndex];
+					Sound.slide();
 					Tween.start(shop[selectedHandIndex], {
 						scaleX: 3,
 						scaleY: 3,
@@ -510,13 +516,16 @@ class GameScreen extends AbstractScreen{
 
 			if(backButton.clicked){
 				phaseStep = -1;
-
+				Sound.slide();
 				Tween.start(playerHand[selectedHandIndex], {
 					scaleX: 1,
 					scaleY: 1,
 					x: cardHandX(selectedHandIndex),
 					y: cardHandY(0)
-				}, 0.2).then(t -> phaseStep = PLAYER_TURN_WAIT);
+				}, 0.2).then(t -> {
+					phaseStep = PLAYER_TURN_WAIT;
+					focusCard = null;
+				});
 			}
 
 			if(playButton.clicked){
@@ -541,7 +550,7 @@ class GameScreen extends AbstractScreen{
 
 			if(backButton.clicked){
 				phaseStep = -1;
-
+				Sound.slide();
 				Tween.start(shop[selectedHandIndex], {
 					scaleX: 1,
 					scaleY: 1,
@@ -556,6 +565,7 @@ class GameScreen extends AbstractScreen{
 
 				var cardSpr = shop[selectedHandIndex];
 				var nextPlayerHandIndex = playerHand.length;
+				Sound.slide();
 				Tween.start(cardSpr, { 
 					scaleX: 1, 
 					scaleY: 1, 

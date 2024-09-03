@@ -26,7 +26,11 @@ class Dice extends Sprite{
 
 			if(r < 0){
 				r = 0.1;
-				f = Math.ceil(Math.random() * 6);
+				var nf = Math.ceil(Math.random() * 6);
+				if(nf != f){
+					Sound.roll();
+					f = nf;
+				}
 			}
 		}
 
@@ -35,10 +39,10 @@ class Dice extends Sprite{
 		Main.context.fillStyle = "#f00";
 		Main.context.roundRect(x, y, w, h, 5, true);
 
-		Main.context.font = "100px sans-serif";
+		Main.context.font = "200px sans-serif";
 		Main.context.fillStyle = "#fff";
 		var tx = Std.string(f);
-		Main.context.centeredText(tx, x, w, y + w * 0.6);
+		Main.context.centeredText(tx, x, w, y + h * 0.73);
 	}
 
 	public function roll():Promise<Int>{
