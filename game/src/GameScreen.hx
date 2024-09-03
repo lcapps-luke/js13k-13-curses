@@ -1,5 +1,6 @@
 package;
 
+import ui.effect.RemovePointsEffect;
 import ui.effect.AddPointsEffect;
 import ui.effect.MoveCurseEffect;
 import ui.effect.RemoveCurseEffect;
@@ -8,7 +9,6 @@ import ui.TextSprite;
 import ui.Sprite;
 import game.AIPlayer;
 import game.CardEffectLibrary;
-import ui.effect.PlaceholderEffect;
 import ui.effect.AddCurseEffect;
 import game.CardEffect;
 import ui.effect.CardEffectSprite;
@@ -626,7 +626,7 @@ class GameScreen extends AbstractScreen{
 			case CardEffect.GAIN_POINT:
 				return new AddPointsEffect(playerIndex, board, efunc);
 			case CardEffect.REMOVE_POINT:
-				return new PlaceholderEffect(playerIndex, board, efunc);
+				return new RemovePointsEffect(playerIndex, board, efunc);
 				/*
 			case CardEffect.SEAL_OWN_CURSE:
 				return new PlaceholderEffect(playerIndex, board, efunc);
