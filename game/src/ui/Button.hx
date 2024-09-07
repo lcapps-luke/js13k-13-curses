@@ -4,14 +4,14 @@ using ui.ContextUtils;
 
 class Button extends Region{
 	private var label:String;
-	private var font:String;
+	private var fontSize:Int;
 
 	private var textWidth:Float;
 
-	public function new(label:String, font:String, x:Float, y:Float, w:Float, h:Float){
+	public function new(label:String, fontSize:Int, x:Float, y:Float, w:Float, h:Float){
 		super(x, y, w, h);
 
-		Main.context.font = font;
+		Main.context.font = '${fontSize}px sans-serif';
 		textWidth = Main.context.measureText(label).width;
 
 		if(this.w <= 0){
@@ -19,7 +19,7 @@ class Button extends Region{
 		}
 
 		this.label = label;
-		this.font = font;
+		this.fontSize = fontSize;
 	}
 
 	override function update(s:Float=0) {
@@ -35,14 +35,13 @@ class Button extends Region{
 		}
 		Main.context.roundRect(x, y, w, h, 10, true, true);
 
-		Main.context.font = font;
+		Main.context.font = '${fontSize}px sans-serif';
 		Main.context.lineWidth = 10;
 		Main.context.lineJoin="round";
 
 		Main.context.fillStyle = "#000";
 		Main.context.strokeStyle = "#fff";
-		//Main.context.strokeText(label, x + (w / 2 - textWidth / 2), y + h * 0.7, w);
-		Main.context.fillText(label, x + (w / 2 - textWidth / 2), y + h * 0.7, w);
+		Main.context.centeredText(label, x, w, y + (h / 2 - fontSize * -0.35));
 
 		if(!enabled){
 			Main.context.strokeStyle = "#000";

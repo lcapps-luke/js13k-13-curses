@@ -64,7 +64,7 @@ class GameScreen extends AbstractScreen{
 	private var coin = new Coin(Main.WIDTH + 420, Main.HEIGHT / 2 - 210, true);
 	private var flipButton:Button;
 
-	private var dice = new Dice(Main.WIDTH, Main.HEIGHT / 2 - 150);
+	private var dice = new Dice(Main.WIDTH, Main.HEIGHT / 2 - Dice.HEIGHT / 2);
 	private var rollButton:Button;
 
 	private var endTurnButton:Button;
@@ -86,13 +86,13 @@ class GameScreen extends AbstractScreen{
 		super();
 		phaseFunc = gameStartPhase;
 
-		flipButton = new Button("Flip", "100px sans-serif", 0, Main.HEIGHT * 0.65, -1, 120);
+		flipButton = new Button("Flip", 100, 0, Main.HEIGHT * 0.65, -1, 120);
 		flipButton.x = Main.WIDTH / 2 - flipButton.w / 2;
 
-		rollButton = new Button("Roll", "100px sans-serif", 0, Main.HEIGHT * 0.65, -1, 120);
+		rollButton = new Button("Roll", 100, 0, Main.HEIGHT * 0.65, -1, 120);
 		rollButton.x = Main.WIDTH / 2 - flipButton.w / 2;
 
-		endTurnButton = new Button("End Turn", "40px sans-serif", 0, Main.HEIGHT / 2 + 10, -1, 130);
+		endTurnButton = new Button("End Turn", 40, 0, Main.HEIGHT / 2 + 10, -1, 130);
 		endTurnButton.x = Main.WIDTH * 0.8 + Main.WIDTH / 10 - endTurnButton.w / 2;
 
 		for(i in 0...5){
@@ -108,16 +108,16 @@ class GameScreen extends AbstractScreen{
 
 		var playBackSpace = (Main.WIDTH / 2 - (CardSprite.WIDTH * 3) / 2);
 
-		backButton = new Button("Back", "40px sans-serif", 0, Main.HEIGHT * 0.6, -1, 130);
+		backButton = new Button("Back", 40, 0, Main.HEIGHT * 0.6, -1, 130);
 		backButton.x = playBackSpace / 2 - backButton.w / 2;
 
-		playButton = new Button("Play", "40px sans-serif", 0, Main.HEIGHT * 0.6, -1, 130);
+		playButton = new Button("Play", 40, 0, Main.HEIGHT * 0.6, -1, 130);
 		playButton.x = Main.WIDTH - (playBackSpace / 2 - playButton.w / 2) - playButton.w;
 
-		buyButton = new Button("Buy", "40px sans-serif", 0, Main.HEIGHT * 0.6, -1, 130);
+		buyButton = new Button("Buy", 40, 0, Main.HEIGHT * 0.6, -1, 130);
 		buyButton.x = Main.WIDTH - (playBackSpace / 2 - playButton.w / 2) - playButton.w;
 
-		endGameButton = new Button("Restart", "100px sans-serif", 0, Main.HEIGHT * 0.65, -1, 120);
+		endGameButton = new Button("Restart", 100, 0, Main.HEIGHT * 0.65, -1, 120);
 		endGameButton.x = Main.WIDTH / 2 - endGameButton.w / 2;
 	}
 
@@ -222,6 +222,7 @@ class GameScreen extends AbstractScreen{
 	private function setPhase(p:Float->Void = null){
 		phaseFunc = p == null ? s->{} : p;
 		phaseStep = 0;
+		focusCard = null;
 	}
 
 	private function gameStartPhase(s:Float){

@@ -16,7 +16,7 @@ class MainMenuScreen extends AbstractScreen{
 	public function new(){
 		super();
 
-		playButton = new Button("Play", "100px sans-serif", 0, Main.HEIGHT * 0.5, 0, 140);
+		playButton = new Button("Play", 100, 0, Main.HEIGHT * 0.5, 0, 140);
 		playButton.x = Main.WIDTH / 2 - playButton.w / 2;
 		playButton.onClick = () -> Main.currentScreen = new GameScreen();
 
