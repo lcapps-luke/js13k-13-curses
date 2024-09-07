@@ -7,6 +7,12 @@ import js.Browser;
 
 @:native("Ptr")
 class Pointer{
+	private static inline var GESTURE_DISTANCE:Float = 150;
+	public static inline var GESTURE_SWIPE_UP:Int = 1;
+	public static inline var GESTURE_SWIPE_DOWN:Int = 2;
+	public static inline var GESTURE_SWIPE_LEFT:Int = 3;
+	public static inline var GESTURE_SWIPE_RIGHT:Int = 4;
+
 	public static var X(default, null):Float = 0;
 	public static var Y(default, null):Float = 0;
 
@@ -16,7 +22,11 @@ class Pointer{
 	@:native("D")
 	public static var DOWN:Bool = false;
 
+	public static var GESTURE:Int = 0;
+
 	private static var mTouch:Int = -1;
+	private static var tsx:Float = 0;
+	private static var tsy:Float = 0;
 
 	@:native("i")
 	public static function init() {
@@ -59,6 +69,8 @@ class Pointer{
 				mTouch = t.identifier;
 				X = x;
 				Y = y;
+				tsx = x;
+				tsy = y;
 				DOWN = true;
 			}
 		}
@@ -79,14 +91,6 @@ class Pointer{
 		}
 	}
 
-	private static function tpx(t:Touch):Float {
-		return ((t.clientX - Main.canvas.offsetLeft) / Main.canvas.clientWidth) * Main.WIDTH;
-	}
-
-	private static function tpy(t:Touch):Float {
-		return ((t.clientY - Main.canvas.offsetTop) / Main.canvas.clientHeight) * Main.HEIGHT;
-	}
-
 	@:native("ote")
 	private static function onTouchEnd(e:TouchEvent) {
 		e.preventDefault();
@@ -96,12 +100,36 @@ class Pointer{
 				CLICK = true;
 				mTouch = -1;
 				DOWN = false;
+
+				GESTURE = getGesture(tsx, tsy, tpx(t), tpy(t));
 			}
 		}
+	}
+
+	private static function tpx(t:Touch):Float {
+		return ((t.clientX - Main.canvas.offsetLeft) / Main.canvas.clientWidth) * Main.WIDTH;
+	}
+
+	private static function tpy(t:Touch):Float {
+		return ((t.clientY - Main.canvas.offsetTop) / Main.canvas.clientHeight) * Main.HEIGHT;
+	}
+
+	private static function getGesture(sx:Float, sy:Float, ex:Float, ey:Float){
+		if(ex - sx > GESTURE_DISTANCE){
+			return GESTURE_SWIPE_RIGHT;
+		}else if(ex - sx < -GESTURE_DISTANCE){
+			return GESTURE_SWIPE_LEFT;
+		}else if(ey - sy > GESTURE_DISTANCE){
+			return GESTURE_SWIPE_DOWN;
+		}else if(ey - sy < -GESTURE_DISTANCE){
+			return GESTURE_SWIPE_UP;
+		}
+		return 0;
 	}
 
 	@:native("u")
 	public static function update() {
 		CLICK = false;
+		GESTURE = 0;
 	}
 }

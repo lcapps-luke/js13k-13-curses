@@ -15,6 +15,7 @@ class Region{
 
 	public var onClick:Void->Void;
 	public var enabled:Bool = true;
+	public var gesture:Int = -1;
 
 	private var clickSound = Sound.button;
 
@@ -29,7 +30,7 @@ class Region{
 		state = STATE_NORMAL;
 		clicked = false;
 
-		if(enabled && !(Pointer.X < x || Pointer.Y < y || Pointer.X > x + w || Pointer.Y > y + h)){
+		if(enabled && (!(Pointer.X < x || Pointer.Y < y || Pointer.X > x + w || Pointer.Y > y + h))){
 			state = Pointer.DOWN ? STATE_DOWN : STATE_OVER;
 			clicked = Pointer.CLICK;
 			if(clicked){
@@ -38,7 +39,14 @@ class Region{
 					onClick();
 				}
 			}
-			
+		}
+
+		if(enabled && Pointer.GESTURE == gesture){
+			clicked = Pointer.CLICK;
+			clickSound();
+			if(onClick != null){
+				onClick();
+			}
 		}
 	}
 }

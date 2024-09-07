@@ -1,5 +1,6 @@
 package;
 
+import ui.Pointer;
 import ui.effect.RemovePointsEffect;
 import ui.effect.AddPointsEffect;
 import ui.effect.MoveCurseEffect;
@@ -88,9 +89,11 @@ class GameScreen extends AbstractScreen{
 
 		flipButton = new Button("Flip", 100, 0, Main.HEIGHT * 0.65, -1, 120);
 		flipButton.x = Main.WIDTH / 2 - flipButton.w / 2;
+		flipButton.gesture = Pointer.GESTURE_SWIPE_UP;
 
 		rollButton = new Button("Roll", 100, 0, Main.HEIGHT * 0.65, -1, 120);
 		rollButton.x = Main.WIDTH / 2 - flipButton.w / 2;
+		rollButton.gesture = Pointer.GESTURE_SWIPE_UP;
 
 		endTurnButton = new Button("End Turn", 40, 0, Main.HEIGHT / 2 + 10, -1, 130);
 		endTurnButton.x = Main.WIDTH * 0.8 + Main.WIDTH / 10 - endTurnButton.w / 2;
@@ -113,9 +116,11 @@ class GameScreen extends AbstractScreen{
 
 		playButton = new Button("Play", 40, 0, Main.HEIGHT * 0.6, -1, 130);
 		playButton.x = Main.WIDTH - (playBackSpace / 2 - playButton.w / 2) - playButton.w;
+		playButton.gesture = Pointer.GESTURE_SWIPE_UP;
 
 		buyButton = new Button("Buy", 40, 0, Main.HEIGHT * 0.6, -1, 130);
 		buyButton.x = Main.WIDTH - (playBackSpace / 2 - playButton.w / 2) - playButton.w;
+		buyButton.gesture = Pointer.GESTURE_SWIPE_DOWN;
 
 		endGameButton = new Button("Restart", 100, 0, Main.HEIGHT * 0.65, -1, 120);
 		endGameButton.x = Main.WIDTH / 2 - endGameButton.w / 2;
@@ -513,6 +518,7 @@ class GameScreen extends AbstractScreen{
 
 		if(phaseStep == PLAYER_TURN_SHOW_HAND){
 			playButton.update();
+			backButton.gesture = Pointer.GESTURE_SWIPE_DOWN;
 			backButton.update();
 
 			if(backButton.clicked){
@@ -547,6 +553,7 @@ class GameScreen extends AbstractScreen{
 
 		if(phaseStep == PLAYER_TURN_SHOW_SHOP){
 			buyButton.update();
+			backButton.gesture = Pointer.GESTURE_SWIPE_UP;
 			backButton.update();
 
 			if(backButton.clicked){
