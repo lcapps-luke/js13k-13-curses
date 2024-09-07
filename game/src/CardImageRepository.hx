@@ -23,6 +23,8 @@ class CardImageRepository {
 	private static inline var FACE_Y:Float = 570 - FACE_HEIGHT;
 	private static inline var FACE_XY_DIFF:Float = FACE_Y - FACE_X;
 
+	public static inline var COIN_A:String = "a";
+	public static inline var COIN_B:String = "b";
 
 	private static var repo = new Map<String, ImageBitmap>();
 
@@ -31,18 +33,22 @@ class CardImageRepository {
 	private static function init() {
 		if (d == null) {
 			var c = Browser.document.createCanvasElement();
-			c.width = WIDTH;
-			c.height = HEIGHT;
+			c.width = 1000;
+			c.height = 1000;
 			d = c.getContext2d();
 		}
 	}
 
-	public static function getBack():ImageBitmap {
-		return repo.get("");
+	public static inline function getBack():ImageBitmap {
+		return get("");
 	}
 
-	public static function getImage(c:Card):ImageBitmap {
-		return repo.get(c.getSerial());
+	public static inline function getImage(c:Card):ImageBitmap {
+		return get(c.getSerial());
+	}
+
+	public static function get(s:String){
+		return repo.get(s);
 	}
 
 	public static function createImage(c:Card):Promise<ImageBitmap> {
@@ -213,5 +219,34 @@ class CardImageRepository {
 	}
 	private static inline function faceSize(s:Int){
 		return FACE_HEIGHT * (s / 10);
+	}
+
+	public static function createCoinImages(){
+		var promiseList = new Array<Promise<ImageBitmap>>();
+
+		d.font = "350px sans-serif";
+
+		for(i in 0...2){
+			d.clearRect(0, 0, WIDTH, HEIGHT);
+
+			d.lineWidth = 3;
+			d.strokeStyle = "#000";
+			d.fillStyle = "#fc0";
+			d.beginPath();
+			d.ellipse(210, 210, 207, 207, 0, 0, Math.PI * 2);
+			d.fill();
+			d.stroke();
+
+			d.fillStyle = "#880";
+			d.centeredText(i == 0 ? "▼" : "▲", 0, 420, 210 - 350 * (i == 0 ? -0.42 : -0.28));
+
+			var b = d.getImageData(0, 0, 420, 420);
+			promiseList.push(Browser.window.createImageBitmap(b).then(ib -> {
+				repo.set(i == 0 ? COIN_A : COIN_B, ib);
+				return ib;
+			}));
+		}
+
+		return Promise.all(promiseList);
 	}
 }

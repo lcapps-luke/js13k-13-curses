@@ -43,15 +43,19 @@ class MainMenuScreen extends AbstractScreen{
 		if(loaded){
 			playButton.update();
 		}else if(loadNext){
+			loadNext = false;
 			Main.context.font = "70px sans-serif";
 			Main.context.centeredText("Loading...", 0, Main.WIDTH, Main.HEIGHT / 2);
+			
 			var next = cardLoadQueue.pop();
+			
 			if(next == null){
-				loaded = true;
+				CardImageRepository.createCoinImages().then(c -> {
+					loaded = true;
+				});
 				return;
 			}
 
-			loadNext = false;
 			CardImageRepository.createImage(next).then(c -> {
 				loadNext = true;
 			});

@@ -1,5 +1,6 @@
 package ui;
 
+import js.html.ImageBitmap;
 import js.lib.Promise;
 
 class Coin extends Sprite{
@@ -10,9 +11,16 @@ class Coin extends Sprite{
 
 	private var c:Bool->Void = null;
 
+	private var face:Array<ImageBitmap>;
+
 	public function new(x:Float, y:Float, side:Bool){
 		super(x, y, 420, 420);
 		scaleY = side ? 1 : -1;
+
+		face = [
+			CardImageRepository.get(CardImageRepository.COIN_A),
+			CardImageRepository.get(CardImageRepository.COIN_B)
+		];
 	}
 
 	public function update(s:Float) {
@@ -31,13 +39,9 @@ class Coin extends Sprite{
 			scaleY = scaleY > 0 ? 1 : -1;
 			c(scaleY > 0);
 		}
-		
-		Main.context.lineWidth = 3;
-		Main.context.strokeStyle = "#000";
-		Main.context.fillStyle = scaleY > 0 ? "#f00" : "#00f";
-		Main.context.beginPath();
-		Main.context.ellipse(x + w/2, y + w/2, w/2, Math.abs((h/2) * scaleY), 0, 0, Math.PI * 2);
-		Main.context.fill();
+
+		Main.context.drawImage(scaleY > 0 ? face[0] : face[1], 0, 0, w, h, 
+			x, y + (h/2 - Math.abs(h * scaleY)/2), w, Math.abs(h * scaleY));
 	}
 
 	public function flip():Promise<Bool>{
