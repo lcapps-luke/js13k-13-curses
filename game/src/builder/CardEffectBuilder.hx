@@ -89,7 +89,6 @@ class CardEffectBuilder {
 		fields.push(colourField);
 
 		var code = '[${functions.join(",")}]';
-		trace(code);
 		var funcExpr = Context.parseInlineString(code, Context.currentPos());
 
 		var funcField = {

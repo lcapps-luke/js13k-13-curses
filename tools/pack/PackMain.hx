@@ -19,7 +19,11 @@ class PackMain {
 
 	private static var lastSize:Int = -1;
 
+	#if ROADROLLER
+	private static inline var ROAD_ROLLER = true;
+	#else
 	private static inline var ROAD_ROLLER = false;
+	#end
 
 	public static function main() {
 		if (FileSystem.exists(packageFile)) {
