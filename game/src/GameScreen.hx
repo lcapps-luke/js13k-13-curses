@@ -57,6 +57,7 @@ class GameScreen extends AbstractScreen{
 	private var roundTurn:Int = 0;
 
 	private var playerTurn:Int = -1;
+	private var myDrawIndex:Int = 0;
 
 	private var playerHand = new Array<CardSprite>();
 	private var aiHand = new Array<CardSprite>();
@@ -236,7 +237,8 @@ class GameScreen extends AbstractScreen{
 		//draw cards
 		var lastTween:Promise<Dynamic> = null;
 		for(i in 0...6){
-			var playerIndex = i % 2;
+			var drawIndex = i % 2;
+			var playerIndex = drawIndex == myDrawIndex ? 0 : 1;
 
 			var card = board.drawCard();
 			board.players[playerIndex].cards.push(card);

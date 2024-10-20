@@ -10,6 +10,8 @@ class Board{
 	public var shop(default, null):Array<Card>;
 	private var round:Int;
 
+	public var cardQueue = new Array<Card>();
+
 	public function new(){
 		players = [
 			new Player(),
@@ -28,7 +30,20 @@ class Board{
 	}
 
 	public function drawCard(){
+		if(cardQueue.length > 0){
+			return cardQueue.shift();
+		}
 		return CardEffectLibrary.getRandomCard();
+	}
+
+	public function enqueueCard(card:Card = null){
+		if(card != null){
+			cardQueue.push(card);
+		}else{
+			card = CardEffectLibrary.getRandomCard();
+			cardQueue.push(card);
+		}
+		return card;
 	}
 
 	public function resetShop(){

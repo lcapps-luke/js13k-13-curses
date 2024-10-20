@@ -1,5 +1,6 @@
 -cp game/src
 -main Main
+-L peerhx
 -js build/main.js
 -dce full
 

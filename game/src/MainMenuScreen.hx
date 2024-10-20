@@ -8,6 +8,7 @@ using ui.ContextUtils;
 
 class MainMenuScreen extends AbstractScreen{
 	private var playButton:Button;
+	private var multiplayer:Button;
 	
 	private static var loaded:Bool = false;
 	private static var cardLoadQueue = new Array<Card>();
@@ -16,9 +17,13 @@ class MainMenuScreen extends AbstractScreen{
 	public function new(){
 		super();
 
-		playButton = new Button("Play", 100, 0, Main.HEIGHT * 0.5, 0, 140);
+		playButton = new Button("Single-Player", 100, 0, Main.HEIGHT * 0.4, 0, 140);
 		playButton.x = Main.WIDTH / 2 - playButton.w / 2;
 		playButton.onClick = () -> Main.currentScreen = new GameScreen();
+
+		multiplayer = new Button("Multiplayer", 100, 0, Main.HEIGHT * 0.6, 0, 140);
+		multiplayer.x = Main.WIDTH / 2 - multiplayer.w / 2;
+		multiplayer.onClick = () -> Main.currentScreen = new MultiplayerScreen();
 
 		if(!loaded){
 			for(d in 0...CardEffectLibrary.getDeck().length){
@@ -42,6 +47,7 @@ class MainMenuScreen extends AbstractScreen{
 
 		if(loaded){
 			playButton.update();
+			multiplayer.update();
 		}else if(loadNext){
 			loadNext = false;
 			Main.context.font = "70px sans-serif";
