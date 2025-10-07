@@ -553,17 +553,7 @@ class GameScreen extends AbstractScreen{
 
 			if(playButton.clicked){
 				phaseStep = -1;
-				//TODO play card
-				var cardSpr = playerHand[selectedHandIndex];
-				Tween.start(cardSpr, { scaleX: 0, scaleY: 0, y:Main.HEIGHT / 2 }, 0.5)
-					.then(t -> {return playCard(0, cardSpr);})
-					.then(t -> {
-						if(board.gameOver()){
-							setPhase(gameEndPhase);
-						}else{
-							phaseStep = PLAYER_TURN_WAIT;
-						}
-					});
+				onPlayerTurnPlayCard(); // play card
 			}
 		}
 
@@ -585,32 +575,49 @@ class GameScreen extends AbstractScreen{
 
 			if(buyButton.clicked){
 				phaseStep = -1;
-				board.players[0].points -= shop[selectedHandIndex].card.cost;
-
-				var cardSpr = shop[selectedHandIndex];
-				var nextPlayerHandIndex = playerHand.length;
-				Sound.slide();
-				Tween.start(cardSpr, { 
-					scaleX: 1, 
-					scaleY: 1, 
-					x: cardHandX(nextPlayerHandIndex),
-					y: cardHandY(0)
-				}, 0.5).then(t -> {
-					//remove card from shop
-					board.shop[selectedHandIndex] = null;
-					shop[selectedHandIndex] = null;
-					//add card to player
-					board.players[0].cards.push(cardSpr.card);
-					playerHand.push(cardSpr);
-
-					phaseStep = PLAYER_TURN_WAIT;
-				});
+				onPlayerTurnBuy();
 			}
 		}
 	}
 
 	private function onPlayerTurnEndTurnClicked(){
 		nextTurn();
+	}
+
+	private function onPlayerTurnPlayCard(){
+		var cardSpr = playerHand[selectedHandIndex];
+		Tween.start(cardSpr, { scaleX: 0, scaleY: 0, y:Main.HEIGHT / 2 }, 0.5)
+			.then(t -> {return playCard(0, cardSpr);})
+			.then(t -> {
+				if(board.gameOver()){
+					setPhase(gameEndPhase);
+				}else{
+					phaseStep = PLAYER_TURN_WAIT;
+				}
+			});
+	}
+
+	private function onPlayerTurnBuy(){
+		board.players[0].points -= shop[selectedHandIndex].card.cost;
+
+		var cardSpr = shop[selectedHandIndex];
+		var nextPlayerHandIndex = playerHand.length;
+		Sound.slide();
+		Tween.start(cardSpr, { 
+			scaleX: 1, 
+			scaleY: 1, 
+			x: cardHandX(nextPlayerHandIndex),
+			y: cardHandY(0)
+		}, 0.5).then(t -> {
+			//remove card from shop
+			board.shop[selectedHandIndex] = null;
+			shop[selectedHandIndex] = null;
+			//add card to player
+			board.players[0].cards.push(cardSpr.card);
+			playerHand.push(cardSpr);
+
+			phaseStep = PLAYER_TURN_WAIT;
+		});
 	}
 
 	private function playCard(playerIndex:Int, spr:CardSprite):Promise<Dynamic>{

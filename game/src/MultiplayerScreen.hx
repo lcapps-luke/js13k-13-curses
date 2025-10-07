@@ -43,6 +43,9 @@ class MultiplayerScreen extends AbstractScreen{
 		if(!ServerClient.connected && hasConnected){
 			statusText = "Connection Lost";
 		}
+		if(!ServerClient.connected && ServerClient.error != null){
+			statusText = ServerClient.error;
+		}
 
 		if(ServerClient.hasMessage()){
 			var msg = ServerClient.nextMessage();

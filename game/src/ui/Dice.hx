@@ -32,9 +32,7 @@ class Dice extends Sprite{
 
 				c(f);
 				c = null;
-			}
-
-			if(r < 0){
+			}else if(r < 0){
 				r = 0.1;
 				var nf = Math.ceil(Math.random() * 6);
 				if(nf != f){

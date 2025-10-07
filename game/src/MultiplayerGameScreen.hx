@@ -16,6 +16,8 @@ class MultiplayerGameScreen extends GameScreen {
 	private var thisPlayerActionResponse = new Array<ServerMessage>();
 	private var acceptMessages = true;
 
+	private var pendingAction:Int = -1;
+
 	public function new(initialState:GameState, diceRoll:Int){
 		super();
 		phaseFunc = initGame;
@@ -48,6 +50,12 @@ class MultiplayerGameScreen extends GameScreen {
 	override function update(s:Float) {
 		super.update(s);
 
+		//handle disconnects
+		if(!ServerClient.connected){
+			//TODO display error
+			Main.currentScreen = new MainMenuScreen();
+		}
+
 		if(acceptMessages && ServerClient.hasMessage()){
 			var msg = ServerClient.nextMessage();
 
@@ -57,6 +65,9 @@ class MultiplayerGameScreen extends GameScreen {
 				case MessageType.ACTION_BUY: onServerAction(msg);
 				case MessageType.ACTION_PLAY: onServerAction(msg);
 				case MessageType.ACTION_END: onServerAction(msg);
+				case MessageType.ERROR: thisPlayerActionResponse.push(msg);
+				case MessageType.LEFT_GAME: onGameQuit(msg.message);
+				//TODO handle game over
 			}
 		}
 	}
@@ -73,11 +84,33 @@ class MultiplayerGameScreen extends GameScreen {
 		if(msg.type == MessageType.ACTION_BUY){
 			lastPromise = onOtherTurnBuy(lastPromise, msg.index);
 		}else if(msg.type == MessageType.ACTION_PLAY){
+			// Replace hidden card
+			var revealedCard = Card.fromSerial(msg.card);
+			board.players[1].cards[msg.index] = revealedCard;
+			aiHand[msg.index].replace(revealedCard);
 			lastPromise = onOtherTurnPlay(lastPromise, msg.index);
 		}
 		lastPromise.then(n -> {
 			acceptMessages = true;
 		});
+	}
+
+	override function playerTurnPhase(s:Float) {
+		super.playerTurnPhase(s);
+
+		if(thisPlayerActionResponse.length == 0){
+			return;
+		}
+
+		var msg = thisPlayerActionResponse.shift();
+		if(msg.type == MessageType.ERROR){
+			onPlayerTurnInvalidAction(msg.message);
+		}else if(msg.type == MessageType.ACTION_BUY){
+			onPlayerTurnBuyAction(msg.index);
+		}else if(msg.type == MessageType.ACTION_PLAY){
+			onPlayerTurnPlayCardAction(msg.index);
+		}
+
 	}
 
 	private function onServerNextTurn(myTurn:Bool, diceRoll:Int){
@@ -87,6 +120,12 @@ class MultiplayerGameScreen extends GameScreen {
 	}
 
 	private function onServerNextRound(state:GameState, diceRoll:Int){
+		lastServerState = state; //TODO sync / validate state
+		board.players[0].curses = state.myState.curses;
+		board.players[0].points = state.myState.points;
+		board.players[1].curses = state.theirState.curses;
+		board.players[1].points = state.theirState.points;
+
 		var isDraw = board.getTurnLeader() == Board.TURN_DRAW;
 		if(isDraw){
 			coin.rig(state.turn);
@@ -97,8 +136,6 @@ class MultiplayerGameScreen extends GameScreen {
 		for(sc in lastServerState.shop){
 			board.enqueueCard(Card.fromSerial(sc));
 		}
-
-		lastServerState = state; //TODO sync / validate state
 
 		setPhase(startRoundPhase);
 	}
@@ -114,5 +151,42 @@ class MultiplayerGameScreen extends GameScreen {
 	override function onPlayerTurnEndTurnClicked() {
 		phaseStep = -1;
 		ServerClient.endTurn();
+	}
+
+	override function onPlayerTurnBuy() {
+		pendingAction = MessageType.ACTION_BUY;
+		ServerClient.buy(selectedHandIndex);
+	}
+
+	override function onPlayerTurnPlayCard() {
+		pendingAction = MessageType.ACTION_PLAY;
+		ServerClient.play(selectedHandIndex);
+	}
+
+	private function onPlayerTurnInvalidAction(message:String){
+		//TODO display error?
+		if(pendingAction == MessageType.ACTION_BUY){
+			phaseStep = GameScreen.PLAYER_TURN_SHOW_SHOP;
+		}else if(pendingAction == MessageType.ACTION_PLAY){
+			phaseStep = GameScreen.PLAYER_TURN_SHOW_HAND;
+		}else{
+			phaseStep = GameScreen.PLAYER_TURN_WAIT;
+		}
+	}
+
+	private function onPlayerTurnBuyAction(idx:Int){
+		selectedHandIndex = idx;
+		super.onPlayerTurnBuy();
+	}
+
+	private function onPlayerTurnPlayCardAction(idx:Int){
+		selectedHandIndex = idx;
+		super.onPlayerTurnPlayCard();
+	}
+
+	private function onGameQuit(msg:String){
+		ServerClient.close();
+		//TODO display quit message
+		Main.currentScreen = new MainMenuScreen();
 	}
 }

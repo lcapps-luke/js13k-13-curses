@@ -10,11 +10,13 @@ import js.html.WebSocket;
 class ServerClient {
 	private static var socket:WebSocket;
 	public static var connected(default, null):Bool = false;
+	public static var error(default, null):Null<String> = null;
 
 	private static var messageQueue = new Array<ServerMessage>();
 
 	public static function connect(){
 		close();
+		error = null;
 		socket = new WebSocket("ws://localhost:8000");
 		socket.onopen = onOpen;
 		socket.onclose = onClose;
@@ -48,6 +50,7 @@ class ServerClient {
 
 	private static function onError(){
 		trace("Socket error");
+		error = "Connection Error";
 	}
 
 	public static function hasMessage(){
@@ -65,6 +68,20 @@ class ServerClient {
 	public static function endTurn() {
 		sendMessage({
 			type: MessageType.ACTION_END
+		});
+	}
+
+	public static function buy(idx:Int) {
+		sendMessage({
+			type: MessageType.ACTION_BUY,
+			index: idx
+		});
+	}
+
+	public static function play(idx:Int) {
+		sendMessage({
+			type: MessageType.ACTION_PLAY,
+			index: idx
 		});
 	}
 }

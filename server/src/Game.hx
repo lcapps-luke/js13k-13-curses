@@ -39,6 +39,8 @@ class Game {
 		var diceRoll = rollDice();
 		playerA.onJoinGame(this, 0, makeState(0), diceRoll);
 		playerB.onJoinGame(this, 1, makeState(1), diceRoll);
+
+		board.players[playerTurn].points += diceRoll;
 	}
 
 	public function update():Bool {
@@ -97,6 +99,8 @@ class Game {
 		for(e in card.effects){
 			CardEffectLibrary.getEffectFunction(e)(player, other);
 		}
+
+		player.cards.remove(card);
 		
 		playerA.cardPlayed(playerIndex, cardIndex, card.getSerial());
 		playerB.cardPlayed(playerIndex, cardIndex, card.getSerial());
@@ -151,6 +155,7 @@ class Game {
 		var diceRoll = rollDice();
 		playerA.startRound(makeState(0), diceRoll);
 		playerB.startRound(makeState(1), diceRoll);
+		board.players[playerTurn].points += diceRoll;
 	}
 
 	private function coinFlip():Bool{

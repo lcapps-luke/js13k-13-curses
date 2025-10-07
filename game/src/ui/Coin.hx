@@ -46,6 +46,7 @@ class Coin extends Sprite{
 				scaleY = scaleY > 0 ? 1 : -1;
 			}
 			c(scaleY > 0);
+			c = null;
 		}
 
 		Main.context.drawImage(scaleY > 0 ? face[0] : face[1], 0, 0, w, h, 
