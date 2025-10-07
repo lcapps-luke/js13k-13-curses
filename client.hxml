@@ -1,6 +1,7 @@
 -cp game/src
+-cp common/src
 -main Main
--L peerhx
+-L haxe-ws
 -js build/main.js
 -dce full
 

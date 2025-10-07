@@ -36,14 +36,8 @@ class Board{
 		return CardEffectLibrary.getRandomCard();
 	}
 
-	public function enqueueCard(card:Card = null){
-		if(card != null){
-			cardQueue.push(card);
-		}else{
-			card = CardEffectLibrary.getRandomCard();
-			cardQueue.push(card);
-		}
-		return card;
+	public function enqueueCard(card){
+		cardQueue.push(card);
 	}
 
 	public function resetShop(){

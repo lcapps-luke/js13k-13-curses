@@ -1,0 +1,7 @@
+-cp server/src
+-cp common/src
+-main Main
+-L haxe-ws
+-L uuid
+-neko build/server.n
+-dce full

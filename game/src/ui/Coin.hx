@@ -13,6 +13,9 @@ class Coin extends Sprite{
 
 	private var face:Array<ImageBitmap>;
 
+	public var isRigged:Bool = false;
+	private var rigResult:Bool = false;
+
 	public function new(x:Float, y:Float, side:Bool){
 		super(x, y, 420, 420);
 		scaleY = side ? 1 : -1;
@@ -36,7 +39,12 @@ class Coin extends Sprite{
 				Sound.coinFlip();
 			}
 		}else if(c != null){
-			scaleY = scaleY > 0 ? 1 : -1;
+			if(isRigged){
+				scaleY = rigResult ? 1 : -1;
+				isRigged = false;
+			}else{
+				scaleY = scaleY > 0 ? 1 : -1;
+			}
 			c(scaleY > 0);
 		}
 
@@ -50,5 +58,10 @@ class Coin extends Sprite{
 		soundTimer = Math.PI / 2;
 
 		return new Promise((res,rej)->{c = res;});
+	}
+
+	public function rig(res:Bool){
+		isRigged = true;
+		rigResult = res;
 	}
 }

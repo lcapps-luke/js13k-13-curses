@@ -13,7 +13,7 @@ class CardEffectBuilder {
 	macro static public function buildEnum():Array<Field> {
 		var fields = Context.getBuildFields();
 
-		var cards:Array<CardJson> = Json.parse(File.getContent("game/resources/cards.json"));
+		var cards:Array<CardJson> = Json.parse(File.getContent("common/resources/cards.json"));
 		var cost = new Array<Int>();
 		var deck = new Array<Array<Int>>();
 		var totalCards = 0;

@@ -37,4 +37,9 @@ class CardSprite extends Sprite{
 			return Tween.start(this, {scaleX:1}, 0.2);
 		});
 	}
+
+	public function replace(card:Card){
+		this.card = card;
+		imgFront = CardImageRepository.getImage(card);
+	}
 }

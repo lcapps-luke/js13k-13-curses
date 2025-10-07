@@ -23,6 +23,21 @@ class Card{
 	}
 
 	public function getSerial():String{
+		if(effects.length == 0){
+			return "";
+		}
+
 		return StringTools.lpad(Std.string(effects[0]), "0", 2) + "-x" + Std.string(effects.length);
+	}
+
+	public static function fromSerial(serial:String){
+		if(serial == ""){
+			return new Card([]);
+		}
+
+		var effectQty = serial.split("-");
+		var effectIndex = Std.parseInt(effectQty[0]);
+		var qty = Std.parseInt(effectQty[1].substr(1));
+		return new Card([for(i in 0...qty) effectIndex]);
 	}
 }

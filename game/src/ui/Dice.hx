@@ -12,6 +12,9 @@ class Dice extends Sprite{
 	private var f:Int = 1;
 	private var r:Float = 0.1;
 
+	public var isRigged:Bool = false;
+	private var rigResult:Int = 0;
+
 	public function new(x:Float, y:Float){
 		super(x, y, HEIGHT, HEIGHT);
 	}
@@ -22,6 +25,11 @@ class Dice extends Sprite{
 			r -= s;
 
 			if(t < 0){
+				if(isRigged){
+					f = rigResult;
+					isRigged = false;
+				}
+
 				c(f);
 				c = null;
 			}
@@ -52,5 +60,10 @@ class Dice extends Sprite{
 			c = res;
 			t = 1;
 		});
+	}
+
+	public function rig(res:Int){
+		isRigged = true;
+		rigResult = res;
 	}
 }
