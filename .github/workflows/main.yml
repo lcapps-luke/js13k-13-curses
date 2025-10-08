@@ -20,6 +20,6 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: server-linux
-          path: build/server-cpp/
+          path: build/server-cpp/Main
           if-no-files-found: error
           retention-days: 2
