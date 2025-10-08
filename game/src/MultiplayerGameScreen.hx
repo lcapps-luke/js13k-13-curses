@@ -7,6 +7,8 @@ import game.Board;
 import game.Card;
 import js.lib.Promise;
 import multiplayer.ServerClient;
+import ui.Alert;
+import ui.Notice;
 
 class MultiplayerGameScreen extends GameScreen {
 
@@ -17,6 +19,8 @@ class MultiplayerGameScreen extends GameScreen {
 	private var acceptMessages = true;
 
 	private var pendingAction:Int = -1;
+	private var notice:Null<Notice> = null;
+	private var alert:Null<Alert> = null;
 
 	public function new(initialState:GameState, diceRoll:Int){
 		super();
@@ -52,8 +56,9 @@ class MultiplayerGameScreen extends GameScreen {
 
 		//handle disconnects
 		if(!ServerClient.connected){
-			//TODO display error
-			Main.currentScreen = new MainMenuScreen();
+			showAlert("Connection Lost", () -> {
+				Main.currentScreen = new MainMenuScreen();
+			});
 		}
 
 		if(acceptMessages && ServerClient.hasMessage()){
@@ -67,8 +72,12 @@ class MultiplayerGameScreen extends GameScreen {
 				case MessageType.ACTION_END: onServerAction(msg);
 				case MessageType.ERROR: thisPlayerActionResponse.push(msg);
 				case MessageType.LEFT_GAME: onGameQuit(msg.message);
-				//TODO handle game over
+				case MessageType.GAME_OVER: onGameOver(msg.turn);
 			}
+		}
+
+		if(notice != null){
+			notice.update(s);
 		}
 	}
 
@@ -92,6 +101,9 @@ class MultiplayerGameScreen extends GameScreen {
 		}
 		lastPromise.then(n -> {
 			acceptMessages = true;
+			if(board.gameOver()){
+				setPhase(gameEndPhase);
+			}
 		});
 	}
 
@@ -113,6 +125,10 @@ class MultiplayerGameScreen extends GameScreen {
 
 	}
 
+	private function gameCancelledPhase(s:Float){
+		alert.update(s);
+	}
+
 	private function onServerNextTurn(myTurn:Bool, diceRoll:Int){
 		dice.rig(diceRoll);
 		playerTurn = myTurn ? 0 : 1;
@@ -120,7 +136,7 @@ class MultiplayerGameScreen extends GameScreen {
 	}
 
 	private function onServerNextRound(state:GameState, diceRoll:Int){
-		lastServerState = state; //TODO sync / validate state
+		lastServerState = state; //TODO sync / validate cards
 		board.players[0].curses = state.myState.curses;
 		board.players[0].points = state.myState.points;
 		board.players[1].curses = state.theirState.curses;
@@ -164,7 +180,8 @@ class MultiplayerGameScreen extends GameScreen {
 	}
 
 	private function onPlayerTurnInvalidAction(message:String){
-		//TODO display error?
+		snowNotice(message);
+
 		if(pendingAction == MessageType.ACTION_BUY){
 			phaseStep = GameScreen.PLAYER_TURN_SHOW_SHOP;
 		}else if(pendingAction == MessageType.ACTION_PLAY){
@@ -172,6 +189,8 @@ class MultiplayerGameScreen extends GameScreen {
 		}else{
 			phaseStep = GameScreen.PLAYER_TURN_WAIT;
 		}
+
+		pendingAction = -1;
 	}
 
 	private function onPlayerTurnBuyAction(idx:Int){
@@ -185,8 +204,29 @@ class MultiplayerGameScreen extends GameScreen {
 	}
 
 	private function onGameQuit(msg:String){
-		ServerClient.close();
-		//TODO display quit message
-		Main.currentScreen = new MainMenuScreen();
+		showAlert(msg, () -> {
+			ServerClient.close();
+			Main.currentScreen = new MainMenuScreen();
+		});
+	}
+
+	private function onGameOver(win:Bool){
+		//TODO set board game over & winner?
+	}
+
+	private function showAlert(message:String, callback:Void->Void){
+		alert = new Alert(message, callback);
+		alert.x = Main.WIDTH / 2 - alert.w / 2;
+		alert.y = Main.HEIGHT / 2 - alert.h / 2;
+
+		Main.timerManager.killAll();
+		setPhase(gameCancelledPhase);
+	}
+
+	private function snowNotice(message:String){
+		notice = new Notice(Main.WIDTH / 2, 0, message);
+		notice.peek(notice.h + 20, 1).then(t -> {
+			notice = null;
+		});
 	}
 }

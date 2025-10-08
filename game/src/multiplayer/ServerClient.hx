@@ -32,24 +32,18 @@ class ServerClient {
 	}
 
 	private static function onOpen(){
-		trace("Socket open");
 		connected = true;
 	}
 
 	private static function onClose(){
-		trace("Socket closed");
 		connected = false;
 	}
 
 	private static function onMessage(m:MessageEvent){
-		trace("Socket message");
-		trace(m);
-
 		messageQueue.push(Json.parse(m.data));
 	}
 
 	private static function onError(){
-		trace("Socket error");
 		error = "Connection Error";
 	}
 

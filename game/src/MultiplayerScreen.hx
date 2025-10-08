@@ -1,5 +1,6 @@
 package;
 
+import js.html.Console;
 import Message.MessageType;
 import multiplayer.ServerClient;
 import ui.Button;
@@ -54,10 +55,8 @@ class MultiplayerScreen extends AbstractScreen{
 			}else if(msg.type ==  MessageType.JOIN_GAME){
 				Main.currentScreen = new MultiplayerGameScreen(msg.state, msg.roll);
 			}else{
-				trace('Unexpected Message type: ${msg.type}');
+				Console.warn("Unexpected Message type", msg);
 			}
 		}
-
-		
 	}
 }

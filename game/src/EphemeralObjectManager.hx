@@ -28,5 +28,9 @@ class EphemeralObjectManager{
 	public function count(){
 		return alive.length;
 	}
+
+	public function killAll(){
+		alive = new Array<AbstractEphemeralObject>();
+	}
 }
 
