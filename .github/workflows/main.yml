@@ -1,0 +1,24 @@
+name: CI
+on: push
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@main
+      - uses: krdlab/setup-haxe@v1
+        with:
+          haxe-version: 4.3.4
+      - name: "Configure Haxelib"
+        run: |
+          haxelib setup /home/runner/haxe/haxelib/
+          haxelib install haxelib 4.0.3
+      - name: "Build Server"
+        run: |
+          haxelib install server.hxml
+          haxe server.hxml
+      - uses: actions/upload-artifact@v4
+        with:
+          name: server-linux
+          path: build/server-cpp/
+          if-no-files-found: error
+          retention-days: 2
