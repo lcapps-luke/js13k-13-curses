@@ -3,5 +3,12 @@
 -main Main
 -L haxe-ws
 -L uuid
--neko build/server.n
 -dce full
+
+--each
+
+-neko build/server.n
+
+--next
+
+--cpp build/server-cpp
