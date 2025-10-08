@@ -11,10 +11,11 @@ jobs:
       - name: "Configure Haxelib"
         run: |
           haxelib setup /home/runner/haxe/haxelib/
-          haxelib install haxelib 4.0.3
+          haxelib install haxelib 4.2.0
       - name: "Build Server"
         run: |
           haxelib install server.hxml --always
+          haxelib install hxcpp --always
           haxe server.hxml
       - uses: actions/upload-artifact@v4
         with:
