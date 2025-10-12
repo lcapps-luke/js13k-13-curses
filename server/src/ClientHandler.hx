@@ -1,18 +1,17 @@
 package;
 
-import haxe.Log;
+import hx.ws.Buffer;
+import hx.ws.SocketImpl;
+import hx.ws.WebSocketHandler;
 import Message.ClientMessage;
 import Message.GameState;
 import Message.MessageType;
 import Message.ServerMessage;
 import haxe.Json;
-import haxe.io.Bytes;
-import haxe.net.WebSocket;
 import uuid.Uuid;
 
-class GameClient {
-	private var socket:WebSocket;
-	public var id(default, null):String;
+class ClientHandler extends WebSocketHandler {
+	public var clientId(default, null):String;
 	public var waitingSince(default, null):Float;
 	public var gamesStarted(default, null) = 0;
 	public var gamesCompleted(default, null) = 0;
@@ -22,31 +21,24 @@ class GameClient {
 
 	//TODO ready state & lobby code to control matching?
 
-	public function new(socket:WebSocket){
-		this.socket = socket;
-		socket.onopen = onSocketOpen;
-		socket.onclose = onSocketClose;
-		socket.onerror = onSocketError;
-		socket.onmessageBytes = onSocketMessageBytes;
-		socket.onmessageString = onSocketMessageString;
+	public function new(socket:SocketImpl){
+		super(socket);
 
-		id = Uuid.nanoId();
+		this.onclose = onSocketClose;
+		this.onerror = onSocketError;
+		this.onopen = onSocketOpen;
+		this.onmessage = onSocketMessage;
+
+		clientId = Uuid.nanoId();
 		waitingSince = Sys.time();
 	}
 
-	public function update():Bool {
-		#if sys
-		socket.process();
-		#end
-		return socket.readyState != Closed;
-	}
-
 	public function isConnected(){
-		return !(socket.readyState == Closing || socket.readyState == Closed); 
+		return state != Closed; 
 	}
 
 	public function isReady(){
-		return socket.readyState == Open;
+		return isConnected() && state != Handshake;
 	}
 
 	public function onJoinWaitingRoom() {
@@ -116,24 +108,34 @@ class GameClient {
 	}
 
 	public function sendMessage(message:ServerMessage) {
-		socket.sendString(Json.stringify(message));
+		send(Json.stringify(message));
 	}
 	
 	private function onSocketOpen(){
-		Logger.debug('Socket Open: ${id}');
+		Logger.debug('Socket Open: ${clientId}');
+		Main.waitingRoom.add(this);
 	}
 	private function onSocketClose(){
-		Logger.debug('Socket Close: ${id}');
+		Logger.debug('Socket Close: ${clientId}');
+		Main.waitingRoom.remove(this);
 	}
-	private function onSocketError(message:String){
-		Logger.debug('Socket Error: ${id} - ${message}');
+	private function onSocketError(message:Dynamic){
+		Logger.debug('Socket Error: ${clientId} - ${message}');
 	}
-	private function onSocketMessageBytes(message:Bytes){
-		Logger.debug('Socket Bytes: ${id} - ${message}');
+
+	private function onSocketMessage(msg:hx.ws.Types.MessageType){
+		switch(msg){
+			case BytesMessage(content): onSocketMessageBytes(content);
+			case StrMessage(content): onSocketMessageString(content);
+		}
+	}
+
+	private function onSocketMessageBytes(message:Buffer){
+		Logger.debug('Socket Bytes: ${clientId} - ${message}');
 	}
 
 	private function onSocketMessageString(message:String){
-		Logger.debug('Socket String: ${id} - ${message}');
+		Logger.debug('Socket String: ${clientId} - ${message}');
 		var clientMessage:ClientMessage = Json.parse(message);
 		
 		try{

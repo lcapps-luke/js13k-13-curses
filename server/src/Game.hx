@@ -11,15 +11,15 @@ import game.CardEffectLibrary;
 class Game {
 	public var id(default, null):String;
 
-	private var playerA:GameClient; // 0
-	private var playerB:GameClient; // 1
+	private var playerA:ClientHandler; // 0
+	private var playerB:ClientHandler; // 1
 
 	private var board:Board;
 	private var playerTurn = -1;
 	private var round:Int = 0;
 	private var roundTurn:Int = 0;
 
-	public function new(playerA:GameClient, playerB:GameClient){
+	public function new(playerA:ClientHandler, playerB:ClientHandler){
 		this.id = Uuid.nanoId();
 
 		this.playerA = playerA;
@@ -191,9 +191,9 @@ class Game {
 	}
 
 	public function playerAId() {
-		return playerA.id;
+		return playerA.clientId;
 	}
 	public function playerBId() {
-		return playerB.id;
+		return playerB.clientId;
 	}
 }

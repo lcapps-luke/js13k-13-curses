@@ -1,7 +1,7 @@
 -cp server/src
 -cp common/src
 -main Main
--L haxe-ws
+-L hxWebSockets
 -L uuid
 -dce full
 

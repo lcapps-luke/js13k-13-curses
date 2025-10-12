@@ -3,20 +3,20 @@ package;
 import haxe.ds.ArraySort;
 
 class WaitingRoom {
-	private var pending:Array<GameClient>;
-	private var ready:Array<GameClient>;
-	private var waiting:Array<GameClient>;
+	private var pending:Array<ClientHandler>;
+	private var ready:Array<ClientHandler>;
+	private var waiting:Array<ClientHandler>;
 	
 	public function new(){
-		pending = new Array<GameClient>();
-		ready = new Array<GameClient>();
-		waiting = new Array<GameClient>();
+		pending = new Array<ClientHandler>();
+		ready = new Array<ClientHandler>();
+		waiting = new Array<ClientHandler>();
 	}
 
 	public function update():Null<Game>{
 		for(p in pending){
 			if(p.isReady()){
-				Logger.info('[ROOM] Client Ready: ${p.id}');
+				Logger.info('[ROOM] Client Ready: ${p.clientId}');
 				ready.push(p);
 			}
 		}
@@ -35,11 +35,18 @@ class WaitingRoom {
 		return null;
 	}
 
-	public function add(client:GameClient){
+	private function removeDisconnected(dis:Array<ClientHandler>, set:Array<ClientHandler>){
+		while(dis.length > 0){
+			set.remove(dis.pop());
+		}
+		Logger.info('[ROOM] ${waiting.length} players waiting');
+	}
+
+	public function add(client:ClientHandler){
 		pending.push(client);
 	}
 
-	public function remove(client:GameClient) {
+	public function remove(client:ClientHandler) {
 		waiting.remove(client);
 		ready.remove(client);
 		pending.remove(client);

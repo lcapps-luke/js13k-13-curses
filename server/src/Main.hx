@@ -1,54 +1,38 @@
 package;
 
-import haxe.net.WebSocketServer;
+import hx.ws.Log;
+import haxe.MainLoop;
+import hx.ws.WebSocketServer;
 
 class Main {
 	private static inline var PORT = 80;
 	private static inline var MAX_CONNECTION_DEFAULT = 100;
 
 	public static var isDebug(default, null) = false;
+	public static var waitingRoom = new WaitingRoom();
 
 	public static function main(){
 		var logLevel = Sys.getEnv("LOG_LEVEL");
 		isDebug = logLevel != null && logLevel == "DEBUG";
 
+		if(isDebug){
+			Log.mask = Log.INFO | Log.DEBUG;
+		}else{
+			Log.mask = Log.INFO;
+		}
+
 		var maxConnectionsEnv = Sys.getEnv("MAX_CONNECTIONS");
 		var maxConnections = maxConnectionsEnv == null ? MAX_CONNECTION_DEFAULT : Std.parseInt(maxConnectionsEnv);
 
-		var server = WebSocketServer.create('0.0.0.0', PORT, maxConnections, isDebug);
-		var clients = new List<GameClient>();
-		var clientsToRemove = new Array<GameClient>();
+		var server = new WebSocketServer<ClientHandler>("0.0.0.0", PORT, maxConnections);
+		server.start();
 
-		var waitingRoom = new WaitingRoom();
 		var games = new List<Game>();
 		var gamesToRemove = new Array<Game>();
 
 		Logger.info('Startup:\n\tdebug: ${isDebug}\n\tmax connections: ${maxConnections}\n\tport: ${PORT}');
 
-		while(true){
-			var newConnection = server.accept();
-
-			if(newConnection != null){
-				var newClient = new GameClient(newConnection);
-
-				Logger.info('New Connection: ${newClient.id}');
-				
-				waitingRoom.add(newClient);
-				clients.add(newClient);
-			}
-			
-			for (client in clients) {
-				if (!client.update()) {
-					clientsToRemove.push(client);
-					Logger.info('Disconnected: ${client.id}');
-				}
-			}
-			while (clientsToRemove.length > 0){
-				var client = clientsToRemove.pop();
-				clients.remove(client);
-				waitingRoom.remove(client);
-			}
-
+		MainLoop.add(function(){
 			var game = waitingRoom.update();
 			if(game != null){
 				Logger.info('Game Started: ${game.id} | players: ${game.playerAId()}, ${game.playerBId()}');
@@ -71,7 +55,7 @@ class Main {
 				games.remove(game);
 			}
 
-			Sys.sleep(clients.length == 0 ? 0.5 : 0.1);
-		}
+			Sys.sleep(games.length == 0 ? 0.5 : 0.1);
+		}).delay;
 	}
 }

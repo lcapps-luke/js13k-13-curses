@@ -8,6 +8,9 @@ import js.html.MessageEvent;
 import js.html.WebSocket;
 
 class ServerClient {
+	//private static inline var SERVER_URL = "ws://localhost";
+	private static inline var SERVER_URL = "wss://13curses.lc-apps.duckdns.org/ws/";
+
 	private static var socket:WebSocket;
 	public static var connected(default, null):Bool = false;
 	public static var error(default, null):Null<String> = null;
@@ -17,7 +20,7 @@ class ServerClient {
 	public static function connect(){
 		close();
 		error = null;
-		socket = new WebSocket("wss://13curses.lc-apps.duckdns.org/ws/");
+		socket = new WebSocket(SERVER_URL);
 		socket.onopen = onOpen;
 		socket.onclose = onClose;
 		socket.onmessage = onMessage;
