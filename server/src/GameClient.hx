@@ -1,5 +1,6 @@
 package;
 
+import haxe.Log;
 import Message.ClientMessage;
 import Message.GameState;
 import Message.MessageType;
@@ -19,6 +20,8 @@ class GameClient {
 	private var game:Game;
 	public var index(default, null):Int;
 
+	//TODO ready state & lobby code to control matching?
+
 	public function new(socket:WebSocket){
 		this.socket = socket;
 		socket.onopen = onSocketOpen;
@@ -32,7 +35,9 @@ class GameClient {
 	}
 
 	public function update():Bool {
+		#if sys
 		socket.process();
+		#end
 		return socket.readyState != Closed;
 	}
 
@@ -103,6 +108,7 @@ class GameClient {
 	}
 
 	public function gameOver(winner:Int){
+		gamesCompleted++;
 		sendMessage({
 			type: MessageType.GAME_OVER,
 			turn: winner == index
@@ -114,20 +120,20 @@ class GameClient {
 	}
 	
 	private function onSocketOpen(){
-		trace("Client connected");
+		Logger.debug('Socket Open: ${id}');
 	}
 	private function onSocketClose(){
-		trace("Client closed");
+		Logger.debug('Socket Close: ${id}');
 	}
 	private function onSocketError(message:String){
-		trace('Client error: $message');
+		Logger.debug('Socket Error: ${id} - ${message}');
 	}
 	private function onSocketMessageBytes(message:Bytes){
-		trace('Client bin message: $message');
+		Logger.debug('Socket Bytes: ${id} - ${message}');
 	}
 
 	private function onSocketMessageString(message:String){
-		trace('Client str message: $message');
+		Logger.debug('Socket String: ${id} - ${message}');
 		var clientMessage:ClientMessage = Json.parse(message);
 		
 		try{

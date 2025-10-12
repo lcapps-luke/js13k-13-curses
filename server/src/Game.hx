@@ -1,5 +1,6 @@
 package;
 
+import uuid.Uuid;
 import Message.ClientMessage;
 import Message.GameState;
 import Message.PlayerState;
@@ -8,6 +9,8 @@ import game.Board;
 import game.CardEffectLibrary;
 
 class Game {
+	public var id(default, null):String;
+
 	private var playerA:GameClient; // 0
 	private var playerB:GameClient; // 1
 
@@ -17,6 +20,8 @@ class Game {
 	private var roundTurn:Int = 0;
 
 	public function new(playerA:GameClient, playerB:GameClient){
+		this.id = Uuid.nanoId();
+
 		this.playerA = playerA;
 		this.playerB = playerB;
 	}
@@ -40,7 +45,7 @@ class Game {
 		playerA.onJoinGame(this, 0, makeState(0), diceRoll);
 		playerB.onJoinGame(this, 1, makeState(1), diceRoll);
 
-		board.players[playerTurn].points += diceRoll;
+		board.players[playerTurn].addPoints(diceRoll);
 	}
 
 	public function update():Bool {
@@ -140,7 +145,7 @@ class Game {
 
 	private function startTurn(){
 		var diceRoll = rollDice();
-		board.players[playerTurn].points += diceRoll;
+		board.players[playerTurn].addPoints(diceRoll);
 		playerA.turnStart(playerTurn, diceRoll);
 		playerB.turnStart(playerTurn, diceRoll);
 	}
@@ -155,7 +160,7 @@ class Game {
 		var diceRoll = rollDice();
 		playerA.startRound(makeState(0), diceRoll);
 		playerB.startRound(makeState(1), diceRoll);
-		board.players[playerTurn].points += diceRoll;
+		board.players[playerTurn].addPoints(diceRoll);
 	}
 
 	private function coinFlip():Bool{
@@ -183,5 +188,12 @@ class Game {
 				return show ? c.getSerial() : "";
 			})
 		}
+	}
+
+	public function playerAId() {
+		return playerA.id;
+	}
+	public function playerBId() {
+		return playerB.id;
 	}
 }

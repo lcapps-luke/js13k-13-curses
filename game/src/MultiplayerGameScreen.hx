@@ -22,6 +22,8 @@ class MultiplayerGameScreen extends GameScreen {
 	private var notice:Null<Notice> = null;
 	private var alert:Null<Alert> = null;
 
+	private var gameEnded = false;
+
 	public function new(initialState:GameState, diceRoll:Int){
 		super();
 		phaseFunc = initGame;
@@ -55,7 +57,7 @@ class MultiplayerGameScreen extends GameScreen {
 		super.update(s);
 
 		//handle disconnects
-		if(!ServerClient.connected){
+		if(!gameEnded && !ServerClient.connected){
 			showAlert("Connection Lost", () -> {
 				Main.currentScreen = new MainMenuScreen();
 			});
@@ -211,7 +213,8 @@ class MultiplayerGameScreen extends GameScreen {
 	}
 
 	private function onGameOver(win:Bool){
-		//TODO set board game over & winner?
+		gameEnded = true;
+		ServerClient.close();
 	}
 
 	private function showAlert(message:String, callback:Void->Void){

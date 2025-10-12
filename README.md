@@ -33,6 +33,7 @@ There are some additional gesture controls available when using a touchscreen:
 * Return the selected card to the shop - Swipe Up.
 
 ## Building
+[![CI](https://github.com/lcapps-luke/js13k-13-curses/actions/workflows/main.yml/badge.svg)](https://github.com/lcapps-luke/js13k-13-curses/actions/workflows/main.yml)
 #### requirements
 - [Haxe](https://haxe.org/)
 - [7-zip](https://www.7-zip.org/)

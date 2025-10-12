@@ -16,7 +16,7 @@ class WaitingRoom {
 	public function update():Null<Game>{
 		for(p in pending){
 			if(p.isReady()){
-				trace('Client Ready');
+				Logger.info('[ROOM] Client Ready: ${p.id}');
 				ready.push(p);
 			}
 		}
@@ -25,9 +25,8 @@ class WaitingRoom {
 			pending.remove(p);
 			waiting.push(p);
 			p.onJoinWaitingRoom();
-			trace('${waiting.length} players waiting');
+			Logger.info('[ROOM] ${waiting.length} players waiting');
 		}
-
 
 		if(waiting.length > 1){
 			return match();
@@ -45,11 +44,11 @@ class WaitingRoom {
 		ready.remove(client);
 		pending.remove(client);
 
-		trace('${waiting.length} players waiting');
+		Logger.info('[ROOM] ${waiting.length} players waiting');
 	}
 
 	private function match(){
-		trace("Matching...");
+		Logger.debug('matching...');
 		ArraySort.sort(waiting, (a,b) -> (a.waitingSince - b.waitingSince) > 0 ? -1 : 1); // desc
 
 		var a = waiting.pop();
@@ -58,7 +57,7 @@ class WaitingRoom {
 		var game = new Game(a, b);
 		game.init();
 
-		trace('${waiting.length} players waiting');
+		Logger.info('[ROOM] ${waiting.length} players waiting');
 		return game;
 	}
 

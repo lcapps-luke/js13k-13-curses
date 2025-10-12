@@ -17,12 +17,13 @@ class ServerClient {
 	public static function connect(){
 		close();
 		error = null;
-		socket = new WebSocket("ws://localhost:8000");
+		socket = new WebSocket("wss://13curses.lc-apps.duckdns.org/ws/");
 		socket.onopen = onOpen;
 		socket.onclose = onClose;
 		socket.onmessage = onMessage;
 		socket.onerror = onError;
 	}
+	
 	public static function close(){
 		if(socket != null){
 			socket.close();
